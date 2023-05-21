@@ -1,15 +1,17 @@
 import json
-from io import BytesIO, StringIO
+import zipfile
+from io import BytesIO
+import os
 
 from pathlib import Path
-from typing import Tuple, Type, Dict, Union
+from typing import Tuple, Type, Dict, Optional
 import numpy as np
 from sklearn.metrics import precision_recall_fscore_support
 
 from src.examples.generate_predictions import GROUND_TRUTH_DATA
 from src.evaluation.evaluator import Evaluator
 from src.evaluation.metric import Metric
-
+from src.common.utils import files_exist
 
 class F1(Metric):
     @classmethod
@@ -20,6 +22,15 @@ class F1(Metric):
     def higher_is_better(cls) -> bool:
         return True
 
+
+class CumulativeReturn(Metric):
+    @classmethod
+    def name(cls) -> str:
+        return 'Cumulative Return'
+
+    @classmethod
+    def higher_is_better(cls) -> bool:
+        return True
 
 class Precision(Metric):
     @classmethod
@@ -51,23 +62,41 @@ class ExampleEvaluator(Evaluator):
     def metrics(cls) -> Tuple[Type[Metric], ...]:
         return (F1, Precision, Recall)
 
-    def evaluate(self, filepath: Path) -> Tuple[Metric, ...]:
-        with filepath.open('r') as f:
-            predictions = json.load(f)
-        return self._evaluate_prediction_dict(predictions)
+    def evaluate(self, filepath: Path) -> bool:
+        # TODO：
+        # 1. check if results are already there
+        #   a. if so, read directly the result
+        #   b. otherwise, run the test function
 
-    def _evaluate_prediction_dict(self, predictions: Dict[str, int]) -> Tuple[Metric, ...]:
-        preds_array = np.array([predictions.get(k, 1-self.true_label_dict[k])
-                                for k in self.true_label_dict.keys()])
-        precision, recall, f1, _ = precision_recall_fscore_support(y_true=self.labels_array,
-                                                                   y_pred=preds_array,
-                                                                   average='binary')
-        return (F1(f1), Precision(precision), Recall(recall))
+        if os.path.exists(filepath.joinpath('backtest.png')):
+            print('evaluated already!')
+            return True
+        else:
+            return self._evaluate_backtest(filepath)
 
-    def validate_submission(self, io_stream: Union[StringIO, BytesIO]) -> bool:
+    def _evaluate_backtest(self, filepath: Path):
+        # TODO：
+        # 1. call the test() function here
+        # arguments:
+        # - start_time
+        # - end_time
+        # - DOW
+        # - ...
+        # test(filepath, **conf_json)
+        print("TBD")
+        pass
+
+    def validate_submission(self, io_stream: BytesIO) -> bool:
         io_stream.seek(0)
         try:
-            self._evaluate_prediction_dict(json.load(io_stream))
-            return True
+            # TODO：
+            # 1. check files exist in the zip
+            #   a) conf.json
+            #   b) process/actor.pth (we might want to extend it to something more general than hardcoded)
+            # 2. put it in a temporary folder and run test
+            # 3. store the result into a folder for future refrence
+            f = zipfile.ZipFile(io_stream)
+            required_files = ['conf.json', 'process/actor.pth']
+            return files_exist(required_files, f.namelist()) # TODO: return also some information about the missing files            
         except:
             return False

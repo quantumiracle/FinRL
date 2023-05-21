@@ -17,8 +17,12 @@ ARGON2_KWARGS = {}
 MAX_NUM_USERS = None
 
 # The extension type required for a submission file (e.g. ".json"). If None, any extension is allowed.
-ALLOWED_SUBMISSION_FILE_EXTENSION = 'json'
+ALLOWED_SUBMISSION_FILE_EXTENSION = 'zip'
 
 SHOW_TOP_K_ONLY = 5
 
 ADMIN_USERNAME = 'admin'
+
+ALLOW_FIRST_LOGIN = False
+
+DEV_MODE = False

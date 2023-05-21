@@ -17,6 +17,7 @@ class Login:
         self.session_state = LoginState(username='', is_logged_in=False)
 
         # placeholders
+        self.allow_first_login = False
         self.first_login_checkbox_placeholder = None
         self.username_placeholder = None
         self.pwd_placeholder = None
@@ -24,7 +25,8 @@ class Login:
         self.login_button_placeholder = None
         self.signout_button_placeholder = None
 
-    def init(self):
+    def init(self, allow_first_login=False):
+        self.allow_first_login = allow_first_login
         self.first_login_checkbox_placeholder = st.sidebar.empty()
         self.username_placeholder = st.sidebar.empty()
         self.pwd_placeholder = st.sidebar.empty()
@@ -55,8 +57,9 @@ class Login:
         if (not self.password_manager.is_username_taken(self.session_state.username)) or \
                 (not self.session_state.is_logged_in):
             self.session_state.is_logged_in = False
-            is_first_login = self.first_login_checkbox_placeholder.checkbox("This is my first login", value=False)
-            if is_first_login:
+            if self.allow_first_login:
+                is_first_login = self.first_login_checkbox_placeholder.checkbox("This is my first login", value=False)
+            if self.allow_first_login and is_first_login:
                 is_logged_in = self.try_signup()
             else:
                 is_logged_in = self.try_login()
@@ -74,6 +77,7 @@ class Login:
         if (self.password_manager.is_username_taken(username)) and \
                 (self.password_manager.verify(username, pwd)):
             self.session_state.username = username
+            st.session_state['username'] = username
             self.session_state.is_logged_in = True
             return True
         else:
@@ -114,6 +118,7 @@ class Login:
             return False
         if self.signout_button_placeholder.button("Sign out"):
             self.session_state.username = ''
+            st.session_state['username'] = ''
             self.session_state.is_logged_in = False
             self.clear_placeholders()
             self.run_and_return_if_access_is_allowed()
