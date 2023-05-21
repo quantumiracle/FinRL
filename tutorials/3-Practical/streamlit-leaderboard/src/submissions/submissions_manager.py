@@ -4,6 +4,7 @@ from datetime import datetime
 from io import BytesIO, StringIO
 from pathlib import Path
 from typing import List, Tuple, Dict, Union, Optional
+import zipfile
 
 from src.evaluation.evaluator import Evaluator
 from src.evaluation.metric import Metric
@@ -41,15 +42,13 @@ class SingleParticipantSubmissions:
         return datetime.strptime(datetime_part, cls._datetime_format)
 
     def add_submission(self, io_stream: Union[BytesIO, StringIO], submission_name: Optional[str] = None,
-                       file_type_extension: Optional[str] = None):
+                       file_type_extension: Optional[str] = None) -> str:
         file_safe_submission_name = base64.urlsafe_b64encode(submission_name.encode()).decode()
         file_safe_submission_name = self._add_timestamp_to_string(file_safe_submission_name or '')
-        file_type_extension = f'.{file_type_extension}' if file_type_extension else ''
-        submission_filename = file_safe_submission_name + file_type_extension
-        submission_path = self.participant_submission_dir.joinpath(submission_filename)
-        with submission_path.open('wb') as f:
-            io_stream.seek(0)
-            shutil.copyfileobj(io_stream, f)
+        submission_path = self.participant_submission_dir.joinpath(file_safe_submission_name)
+        with zipfile.ZipFile(io_stream) as zip_ref:
+            zip_ref.extractall(submission_path)
+        return submission_path
 
     def clear_results(self):
         self.results.clear()
