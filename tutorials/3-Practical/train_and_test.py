@@ -32,7 +32,7 @@ baseline_ticker = 'AXP'
 
 model_name = 'ppo'
 MODEL_IDX = f'{model_name}_{train_start_date}_{train_end_date}'
-
+MODEL_IDX = 'ppo_2022-6-11_2022-8-11_2023-3-4-0-10-6'
 
 # if you want to use larger datasets (change to longer period), and it raises error,
 # please try to increase "target_step". It should be larger than the episode steps.
@@ -107,7 +107,7 @@ def train_and_test(
             API_SECRET=API_SECRET,
             API_BASE_URL=API_BASE_URL,
             erl_params=ERL_PARAMS,
-            cwd=f'./papertrading_erl/{MODEL_IDX}',  # current_working_dir
+            cwd=f'./log/{MODEL_IDX}',  # current_working_dir
             wandb=False,
             break_step=1e7)
 
@@ -124,7 +124,7 @@ def train_and_test(
                          API_SECRET=API_SECRET,
                          API_BASE_URL=API_BASE_URL,
                          #       erl_params=ERL_PARAMS,
-                         cwd=f'./papertrading_erl/{MODEL_IDX}',  # current_working_dir
+                         cwd=f'./log/{MODEL_IDX}',  # current_working_dir
                          if_plot=True,  # to return a dataframe for backtest_plot
                          break_step=1e7)
     print("============== account_value ===========")
@@ -147,7 +147,7 @@ def train_and_test(
 
     print("==============Compare to Baseline===========")
     figs = backtest_plot(account_value, baseline_df)
-    figs.savefig(f'./papertrading_erl/{MODEL_IDX}/backtest.pdf')
+    figs.savefig(f'./log/{MODEL_IDX}/backtest.pdf')
 
 
 if __name__ == '__main__':

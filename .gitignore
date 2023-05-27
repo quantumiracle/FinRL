@@ -5,6 +5,7 @@
 *.pth
 tutorials/3-Practical/papertrading_erl/
 tutorials/3-Practical/log/
+private.py
 
 # remove DS_Store
 **/.DS_Store

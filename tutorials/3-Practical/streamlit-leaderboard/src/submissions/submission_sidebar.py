@@ -59,6 +59,7 @@ class SubmissionSidebar:
                 if submission_dir:
                     evaluation_failed = True
                     with st.spinner('Evaluating your submission...'):
+                        print('result: ', self.submission_evaluator, self.submission_evaluator(submission_dir), submission_dir)
                         if self.submission_evaluator is None or self.submission_evaluator(submission_dir):
                             evaluation_failed = False
                     if evaluation_failed:
