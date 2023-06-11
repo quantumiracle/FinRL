@@ -11,6 +11,7 @@ import pandas as pd
 from custom_plt import create_returns_tear_sheet
 
 ticker_list = DOW_30_TICKER
+# ticker_list = eval('DOW_30_TICKER')
 # ticker_list = CHINESE_STOCK_TICKER[:30]
 
 action_dim = len(ticker_list)
@@ -86,6 +87,8 @@ def train_and_test(
         train_end_date,
         test_start_date,
         test_end_date,
+        ticker_list,
+        candle_time_interval,
         baseline_ticker,
         model_name,
         MODEL_IDX,
@@ -153,5 +156,5 @@ def train_and_test(
 
 
 if __name__ == '__main__':
-    train_and_test(train_start_date, train_end_date, test_start_date, test_end_date, baseline_ticker, model_name,
-                   MODEL_IDX, )
+    train_and_test(train_start_date, train_end_date, test_start_date, test_end_date, ticker_list, candle_time_interval, 
+    baseline_ticker, model_name, MODEL_IDX, )

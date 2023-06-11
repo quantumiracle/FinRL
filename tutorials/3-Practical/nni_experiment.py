@@ -1,4 +1,5 @@
 from train_and_test import *
+from finrl.config_tickers import *
 import time
 import nni
 
@@ -15,16 +16,22 @@ def get_year_month(month_cnt):
 
 def nni_eval(params):
     time_start_month = params.pop("time_start_month")
-    train_start_date = '{}-{}-1'.format(*get_year_month(time_start_month))
+    time_across_month = params.pop("time_across_month")
+    ticker_list = params.pop("ticker_list")
+    candle_time_interval = params.pop("candle_time_interval")
 
-    time_across_month = time_start_month + params.pop("time_across_month")
-    time_across_month = min(time_across_month, 35)
-    train_end_date = '{}-{}-1'.format(*get_year_month(time_across_month))
+    train_start_date = '{}-{}-1'.format(*get_year_month(time_start_month))
+    time_end_month = time_start_month + time_across_month
+    time_end_month = min(time_end_month, 35) # within training range
+    train_end_date = '{}-{}-1'.format(*get_year_month(time_end_month))
 
     time_stamp = time.strftime('%Y%m%d-%H%M%S', time.localtime())
     MODEL_IDX = f'{model_name}_{train_start_date}_{train_end_date}_{time_stamp}'
-    value = train_and_test(train_start_date, train_end_date, test_start_date, test_end_date, baseline_ticker,
-                           model_name, MODEL_IDX, to_train=True)
+
+    ticker_list = eval(ticker_list)
+
+    value = train_and_test(train_start_date, train_end_date, test_start_date, test_end_date, ticker_list, candle_time_interval,
+        baseline_ticker, model_name, MODEL_IDX, to_train=True)
     return value
 
 
