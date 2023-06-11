@@ -64,7 +64,7 @@ def backtest_plot(
             returns=test_returns, benchmark_rets=baseline_returns, set_context=False, return_fig=True
         )
 
-    return figs
+    return figs, test_returns
 
 
 def get_baseline(ticker, start, end):
@@ -140,8 +140,9 @@ def train_and_test(
     print(stats)
 
     print("==============Compare to Baseline===========")
-    figs = backtest_plot(account_value, baseline_df)
+    figs, returns = backtest_plot(account_value, baseline_df)
     figs.savefig(f'./papertrading_erl/{MODEL_IDX}/backtest.pdf')
+    return returns.sum()
 
 
 if __name__ == '__main__':
