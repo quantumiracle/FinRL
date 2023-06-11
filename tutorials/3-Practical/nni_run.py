@@ -1,0 +1,15 @@
+from nni.experiment import Experiment
+from nni_params import *
+
+experiment = Experiment('local')
+experiment.config.search_space = search_space
+experiment.config.trial_command = 'python nni_experiment.py'
+experiment.config.trial_code_directory = '.'
+experiment.config.tuner.name = 'TPE'
+experiment.config.tuner.class_args['optimize_mode'] = 'maximize'
+experiment.config.training_service.use_active_gpu = True
+experiment.config.max_trial_number = 10000
+experiment.config.trial_concurrency = 2
+experiment.run(8880)
+# experiment.stop()
+

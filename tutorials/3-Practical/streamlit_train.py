@@ -307,6 +307,7 @@ if __name__ == "__main__":
         # S&P 500: ^GSPC
         # Dow Jones Index: ^DJI
         # NASDAQ 100: ^NDX
+
         figs = backtest_plot(account_value, baseline_df)
         from PIL import Image
 
