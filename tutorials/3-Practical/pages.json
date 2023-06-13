@@ -1,0 +1,14 @@
+{
+    "a8679a2d06f88f7fdf5c80d2679bdc2b": {
+        "page_script_hash": "a8679a2d06f88f7fdf5c80d2679bdc2b",
+        "page_name": "app",
+        "icon": "",
+        "script_path": "/home/quantumiracle/research/FinRL/tutorials/3-Practical/streamlit-leaderboard/src/app.py"
+    },
+    "87eef944d788026ecac77d68ff744953": {
+        "page_script_hash": "87eef944d788026ecac77d68ff744953",
+        "page_name": "upload",
+        "icon": "",
+        "script_path": "/home/quantumiracle/research/FinRL/tutorials/3-Practical/streamlit-leaderboard/src/pages/upload.py"
+    }
+}

@@ -25,6 +25,8 @@ from finrl.test import test
 from finrl.plot import *
 from private import API_KEY, API_SECRET, API_BASE_URL
 
+import os
+os.chdir("..")
 class F1(Metric):
     @classmethod
     def name(cls) -> str:
