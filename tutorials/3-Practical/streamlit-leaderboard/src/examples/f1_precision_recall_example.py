@@ -99,7 +99,8 @@ class ExampleEvaluator(Evaluator):
         # test(filepath, **conf_json)
         test_start_date = '2022-6-11'
         test_end_date = '2023-1-2'
-        baseline_ticker = '^DJI'
+        # baseline_ticker = '^DJI'
+        baseline_ticker = 'AXP'
 
         ticker_list = DOW_30_TICKER
         candle_time_interval = '1Min'  # '1Min'
@@ -142,7 +143,8 @@ class ExampleEvaluator(Evaluator):
             print(stats)
 
             print("==============Compare to Baseline===========")
-            figs = backtest_plot(account_value, baseline_df)
+            figs = backtest_plot(account_value, baseline_df, baseline_ticker=baseline_ticker,
+)
             figs.savefig(f'{filepath}/backtest.png')
             return True
         except:
