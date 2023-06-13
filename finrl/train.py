@@ -46,9 +46,7 @@ def download_data(
         **kwargs
 ):  
     # data_path = os.path.join(os.path.split(__file__)[0], '..', 'data')
-    # data_path = './data'
-    data_path = '/home/quantumiracle/research/FinRL/tutorials/3-Practical/data' # use absolute path for importing from streamlit
-    # data_file_name = f'alpaca_2022-6-11_2022-9-1.pkl'
+    data_path = './data'
     data_file_name = f'DOW30_alpaca_2019-1-1_2023-1-1.pkl'  # existing large data
     if 'CHI' in ticker_list:
         data_file_name = f'CHI30_alpaca_2019-1-1_2023-1-1.pkl'  # existing large data
