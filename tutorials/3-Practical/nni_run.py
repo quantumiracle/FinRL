@@ -1,5 +1,5 @@
-from nni.experiment import Experiment
-from nni_params import *
+from .nni_sweep.nni.experiment import Experiment
+from .nni_sweep.nni_params import *
 
 experiment = Experiment('local')
 experiment.config.search_space = search_space
@@ -9,7 +9,7 @@ experiment.config.tuner.name = 'TPE'
 experiment.config.tuner.class_args['optimize_mode'] = 'maximize'
 experiment.config.training_service.use_active_gpu = True
 experiment.config.max_trial_number = 10000
-experiment.config.trial_concurrency = 2
+experiment.config.trial_concurrency = 2  # number of jobs to run in parallel
 experiment.run(8880)
 # experiment.stop()
 

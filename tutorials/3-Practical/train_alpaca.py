@@ -3,7 +3,7 @@ from finrl.test import test
 from finrl.config_tickers import DOW_30_TICKER
 from finrl.config import INDICATORS
 from finrl.meta.env_stock_trading.env_stocktrading_np import StockTradingEnv
-from common import *
+from private import API_KEY, API_SECRET, API_BASE_URL
 
 import numpy as np
 import pandas as pd

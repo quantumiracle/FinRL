@@ -3,12 +3,8 @@ from finrl.test import test
 from finrl.config_tickers import *
 from finrl.config import INDICATORS
 from finrl.meta.env_stock_trading.env_stocktrading_np import StockTradingEnv
-from finrl.plot import backtest_stats, get_daily_return, get_baseline # backtest_plot
-from common import *
-import datetime as dt
-from finrl.plot import *
-import pandas as pd
-from custom_plt import create_returns_tear_sheet
+from finrl.plot import backtest_stats, backtest_plot, get_baseline, backtest_plot_v2, get_baseline_v2 # backtest_plot
+from private import API_KEY, API_SECRET, API_BASE_URL
 
 ticker_list = DOW_30_TICKER
 # ticker_list = eval('DOW_30_TICKER')
@@ -34,52 +30,6 @@ baseline_ticker = 'AXP'
 model_name = 'ppo'
 MODEL_IDX = f'{model_name}_{train_start_date}_{train_end_date}'
 MODEL_IDX = 'ppo_2022-6-11_2022-8-11_2023-3-4-0-10-6'
-
-# if you want to use larger datasets (change to longer period), and it raises error,
-# please try to increase "target_step". It should be larger than the episode steps.
-
-
-def backtest_plot(
-        account_value,
-        baseline_df,
-        value_col_name="account_value",
-):
-    df = deepcopy(account_value)
-    # print('date', len(df))
-    # print(type(df["date"][0]), df["date"][0])
-    df["date"] = pd.to_datetime(df["date"])
-    # df["date"] = pd.Timestamp(df["date"]).tz_localize("America/New_York")
-    # df["date"] = df["date"].tz_localize("America/New_York")
-    test_returns = get_daily_return(df, value_col_name=value_col_name)
-    test_returns.fillna(0, inplace=True)  # the first day is nan
-
-    baseline_df["date"] = pd.to_datetime(baseline_df["date"], format="%Y-%m-%d")
-    baseline_df = pd.merge(df[["date"]], baseline_df, how="left", on="date")
-    # import  pdb; pdb.set_trace()
-    # baseline_df = baseline_df.fillna(method="ffill").fillna(method="bfill")
-    baseline_returns = get_daily_return(baseline_df, value_col_name="close")
-    baseline_returns.fillna(0, inplace=True) # the first day is nan
-
-    with pyfolio.plotting.plotting_context(font_scale=1.1):
-        # this will return figs: https://github.com/quantopian/pyfolio/blob/master/pyfolio/tears.py ; create_full_tear_sheet will not
-        figs = create_returns_tear_sheet(
-            returns=test_returns, benchmark_rets=baseline_returns, set_context=False, return_fig=True
-        )
-
-    return figs, test_returns
-
-
-def get_baseline(ticker, start, end):
-    baseline_df = load_df(start, end)
-    baseline_df: pd.DataFrame = baseline_df[baseline_df['tic'] == ticker]
-    if baseline_df.empty:
-        baseline_df = YahooDownloader(
-            start_date=start, end_date=end, ticker_list=[ticker]
-        ).fetch_data()
-    else:
-        baseline_df = baseline_df.loc[baseline_df['timestamp'].dt.time == dt.time(15, 59)]
-        baseline_df['date'] = baseline_df['timestamp'].dt.date
-    return baseline_df
 
 
 def train_and_test(
@@ -135,12 +85,7 @@ def train_and_test(
 
     # baseline stats
     print("==============Get Baseline Stats===========")
-    # baseline_df_dji = get_baseline(
-    #     ticker="^DJI",
-    #     start=test_start_date,
-    #     end=test_end_date)
-
-    baseline_df = get_baseline(            
+    baseline_df = get_baseline_v2(            
             ticker = baseline_ticker, 
             start = test_start_date,
             end = test_end_date)
@@ -149,7 +94,7 @@ def train_and_test(
     print(stats)
 
     print("==============Compare to Baseline===========")
-    figs, returns = backtest_plot(account_value, baseline_df)
+    figs, returns = backtest_plot_v2(account_value, baseline_df)
     figs.savefig(f'./log/{MODEL_IDX}/backtest.pdf')
     return returns.sum()
 

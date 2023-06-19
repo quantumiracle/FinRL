@@ -1,4 +1,4 @@
-from common import *
+from private import API_KEY, API_SECRET, API_BASE_URL
 from finrl.config_tickers import DOW_30_TICKER
 
 from alpaca_trade_api.rest import REST, TimeFrame

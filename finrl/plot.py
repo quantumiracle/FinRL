@@ -82,6 +82,8 @@ def get_baseline(ticker, start, end):
     ).fetch_data()
 
 
+# if you want to use larger datasets (change to longer period), and it raises error,
+# please try to increase "target_step". It should be larger than the episode steps.
 
 def backtest_plot_v2(
         account_value,
@@ -99,7 +101,6 @@ def backtest_plot_v2(
 
     baseline_df["date"] = pd.to_datetime(baseline_df["date"], format="%Y-%m-%d")
     baseline_df = pd.merge(df[["date"]], baseline_df, how="left", on="date")
-    # import  pdb; pdb.set_trace()
     # baseline_df = baseline_df.fillna(method="ffill").fillna(method="bfill")
     baseline_returns = get_daily_return(baseline_df, value_col_name="close")
     baseline_returns.fillna(0, inplace=True) # the first day is nan

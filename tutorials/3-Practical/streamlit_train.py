@@ -9,9 +9,8 @@ from finrl.config import INDICATORS
 from finrl.meta.env_stock_trading.env_stocktrading_np import StockTradingEnv
 from finrl.meta.env_stock_trading.env_stock_papertrading import AlpacaPaperTrading
 from finrl.meta.data_processor import DataProcessor
-from finrl.plot import backtest_stats, get_daily_return, get_baseline
-from train_and_test import backtest_plot, get_baseline
-from common import *
+from finrl.plot import backtest_stats, backtest_plot, get_baseline, backtest_plot_v2, get_baseline_v2 # backtest_plot
+from private import API_KEY, API_SECRET, API_BASE_URL
 
 
 def train_process(**kwargs):
@@ -76,7 +75,7 @@ def test_process(**kwargs):
     # print(account_value)
 
     # baseline stats
-    baseline_df = get_baseline(
+    baseline_df = get_baseline_v2(
         ticker=Baseline, start=kwargs["start_date"], end=kwargs["end_date"]
     )
 
@@ -86,7 +85,7 @@ def test_process(**kwargs):
     # S&P 500: ^GSPC
     # Dow Jones Index: ^DJI
     # NASDAQ 100: ^NDX
-    figs = backtest_plot(account_value, baseline_df)
+    figs, returns = backtest_plot_v2(account_value, baseline_df)
 
     image_path = os.path.join(
         save_path,
@@ -296,7 +295,7 @@ if __name__ == "__main__":
 
         # baseline stats
         print("==============Get Baseline Stats===========")
-        baseline_df = get_baseline(
+        baseline_df = get_baseline_v2(
             ticker=Baseline, start=TestStartDate, end=TestEndDate
         )
 
@@ -308,7 +307,7 @@ if __name__ == "__main__":
         # Dow Jones Index: ^DJI
         # NASDAQ 100: ^NDX
 
-        figs = backtest_plot(account_value, baseline_df)
+        figs, returns = backtest_plot_v2(account_value, baseline_df)
         from PIL import Image
 
         image_path = os.path.join(

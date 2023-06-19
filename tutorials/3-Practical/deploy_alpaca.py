@@ -10,7 +10,7 @@ from finrl.meta.env_stock_trading.env_stock_papertrading import AlpacaPaperTradi
 from finrl.meta.data_processor import DataProcessor
 from finrl.plot import backtest_stats, backtest_plot, get_daily_return, get_baseline
 # from alpaca_trade import AlpacaPaperTrading
-from common import *
+from private import API_KEY, API_SECRET, API_BASE_URL
 
 ticker_list = DOW_30_TICKER
 action_dim = len(DOW_30_TICKER)

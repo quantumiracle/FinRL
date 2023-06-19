@@ -6,7 +6,7 @@ from finrl.meta.env_stock_trading.env_stocktrading_np import StockTradingEnv
 from finrl.meta.env_stock_trading.env_stock_papertrading import AlpacaPaperTrading
 from finrl.meta.data_processor import DataProcessor
 from finrl.plot import backtest_stats, backtest_plot, get_daily_return, get_baseline
-from common import *
+from private import API_KEY, API_SECRET, API_BASE_URL
 from train_alpaca import MODEL_IDX
 
 ticker_list = DOW_30_TICKER

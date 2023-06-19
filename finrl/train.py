@@ -15,9 +15,6 @@ import json
 import pandas as pd
 
 
-# construct environment
-
-
 def clip_by_date(data, start_date, end_date):
     start_time = pd.Timestamp(start_date + " 00:00:00").tz_localize("America/New_York")
     end_time = pd.Timestamp(end_date + " 23:59:59").tz_localize("America/New_York")
