@@ -7,10 +7,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import pyfolio
+import datetime as dt
 from pyfolio import timeseries
 
 from finrl import config
 from finrl.meta.preprocessor.yahoodownloader import YahooDownloader
+from finrl.train import load_df
+from .custom_plt import create_returns_tear_sheet
 
 
 def get_daily_return(df, value_col_name="account_value"):
@@ -57,7 +60,6 @@ def backtest_plot(
     print('date', len(df))
     df["date"] = pd.to_datetime(df["date"])
     test_returns = get_daily_return(df, value_col_name=value_col_name)
-
     baseline_df = get_baseline(
         ticker=baseline_ticker, start=baseline_start, end=baseline_end
     )
@@ -78,6 +80,51 @@ def get_baseline(ticker, start, end):
     return YahooDownloader(
         start_date=start, end_date=end, ticker_list=[ticker]
     ).fetch_data()
+
+
+
+def backtest_plot_v2(
+        account_value,
+        baseline_df,
+        value_col_name="account_value",
+):
+    df = deepcopy(account_value)
+    # print('date', len(df))
+    # print(type(df["date"][0]), df["date"][0])
+    df["date"] = pd.to_datetime(df["date"])
+    # df["date"] = pd.Timestamp(df["date"]).tz_localize("America/New_York")
+    # df["date"] = df["date"].tz_localize("America/New_York")
+    test_returns = get_daily_return(df, value_col_name=value_col_name)
+    test_returns.fillna(0, inplace=True)  # the first day is nan
+
+    baseline_df["date"] = pd.to_datetime(baseline_df["date"], format="%Y-%m-%d")
+    baseline_df = pd.merge(df[["date"]], baseline_df, how="left", on="date")
+    # import  pdb; pdb.set_trace()
+    # baseline_df = baseline_df.fillna(method="ffill").fillna(method="bfill")
+    baseline_returns = get_daily_return(baseline_df, value_col_name="close")
+    baseline_returns.fillna(0, inplace=True) # the first day is nan
+
+    with pyfolio.plotting.plotting_context(font_scale=1.1):
+        # this will return figs: https://github.com/quantopian/pyfolio/blob/master/pyfolio/tears.py ; create_full_tear_sheet will not
+        figs = create_returns_tear_sheet(
+            returns=test_returns, benchmark_rets=baseline_returns, set_context=False, return_fig=True
+        )
+
+    return figs, test_returns
+
+
+def get_baseline_v2(ticker, start, end):
+    baseline_df = load_df(start, end)
+    baseline_df: pd.DataFrame = baseline_df[baseline_df['tic'] == ticker]
+    if baseline_df.empty:
+        baseline_df = YahooDownloader(
+            start_date=start, end_date=end, ticker_list=[ticker]
+        ).fetch_data()
+    else:
+        baseline_df = baseline_df.loc[baseline_df['timestamp'].dt.time == dt.time(15, 59)]
+        baseline_df['date'] = baseline_df['timestamp'].dt.date
+    return baseline_df
+
 
 
 def trx_plot(df_trade, df_actions, ticker_list):

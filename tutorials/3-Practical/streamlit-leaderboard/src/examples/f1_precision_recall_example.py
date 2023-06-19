@@ -20,9 +20,11 @@ sys.path.append(".....")  # root path of Finrl
 from finrl.config import INDICATORS
 from finrl.config_tickers import DOW_30_TICKER
 from finrl.meta.env_stock_trading.env_stocktrading_np import StockTradingEnv
-from finrl.plot import backtest_stats, get_daily_return, get_baseline # backtest_plot
+# from finrl.plot import backtest_stats, get_daily_return, get_baseline # backtest_plot
+from finrl.plot import backtest_stats, get_baseline_v2, backtest_plot_v2 # v2 as in train_and_test
 from finrl.test import test
 from finrl.plot import *
+from finrl.meta.preprocessor.yahoodownloader import YahooDownloader
 from private import API_KEY, API_SECRET, API_BASE_URL
 
 import os
@@ -105,7 +107,7 @@ class ExampleEvaluator(Evaluator):
         ticker_list = DOW_30_TICKER
         candle_time_interval = '1Min'  # '1Min'
         env = StockTradingEnv
-
+        
         try:
             account_value = test(start_date=test_start_date,
                             end_date=test_end_date,
@@ -129,12 +131,7 @@ class ExampleEvaluator(Evaluator):
 
             # baseline stats
             print("==============Get Baseline Stats===========")
-            # baseline_df_dji = get_baseline(
-            #     ticker="^DJI",
-            #     start=test_start_date,
-            #     end=test_end_date)
-
-            baseline_df = get_baseline(            
+            baseline_df = get_baseline_v2(            
                     ticker = baseline_ticker, 
                     start = test_start_date,
                     end = test_end_date)
@@ -143,8 +140,9 @@ class ExampleEvaluator(Evaluator):
             print(stats)
 
             print("==============Compare to Baseline===========")
-            figs = backtest_plot(account_value, baseline_df, baseline_ticker=baseline_ticker,
-)
+            # figs = backtest_plot(account_value, baseline_start=test_start_date, baseline_end=test_end_date, baseline_ticker=baseline_ticker,
+            figs, returns = backtest_plot_v2(account_value, baseline_df)
+
             figs.savefig(f'{filepath}/backtest.png')
             return True
         except:
