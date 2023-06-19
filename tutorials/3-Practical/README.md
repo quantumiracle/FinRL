@@ -44,7 +44,7 @@ python nni_run.py
 
 ### Streamlit On-Page Train/Test/Eval
 
-![streamlit](/home/quantumiracle/research/FinRL/tutorials/3-Practical/img/streamlit.png)
+![streamlit](./img/streamlit.png)
 
 ```
 streamlit run streamlit_train.py --server.fileWatcherType none
