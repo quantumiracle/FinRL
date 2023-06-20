@@ -7,6 +7,7 @@ tutorials/3-Practical/papertrading_erl/
 tutorials/3-Practical/log/
 private.py
 tutorials/3-Practical/streamlit-leaderboard/user_submissions/
+tutorials/3-Practical/private.py
 
 # remove DS_Store
 **/.DS_Store

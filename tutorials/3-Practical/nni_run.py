@@ -1,5 +1,5 @@
-from .nni_sweep.nni_experiment import Experiment
-from .nni_sweep.nni_params import *
+from nni_sweep.nni_experiment import Experiment
+from nni_sweep.nni_params import *
 
 experiment = Experiment('local')
 experiment.config.search_space = search_space
