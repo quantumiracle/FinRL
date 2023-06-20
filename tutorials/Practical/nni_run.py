@@ -3,7 +3,7 @@ from nni_sweep.nni_params import *
 
 experiment = Experiment('local')
 experiment.config.search_space = search_space
-experiment.config.trial_command = 'python nni_experiment.py'
+experiment.config.trial_command = 'python nni_sweep/nni_experiment.py'
 experiment.config.trial_code_directory = '.'
 experiment.config.tuner.name = 'TPE'
 experiment.config.tuner.class_args['optimize_mode'] = 'maximize'
