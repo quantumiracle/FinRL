@@ -1,4 +1,4 @@
-from nni_sweep.nni_experiment import Experiment
+from nni import Experiment
 from nni_sweep.nni_params import *
 
 experiment = Experiment('local')
