@@ -1,4 +1,4 @@
-from finrl.tutorials.Practical.train_and_test import *
+from tutorials.Practical.train_and_test import *
 from finrl.config_tickers import *
 import time
 import nni
