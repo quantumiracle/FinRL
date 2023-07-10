@@ -42,9 +42,15 @@ def train_and_test(
         baseline_ticker,
         model_name,
         MODEL_IDX,
-        to_train=False
+        to_train=False,
+        erl_params=None,
 ):  
     if to_train:
+        if erl_params is None:
+            curr_params = ERL_PARAMS
+        else:
+            curr_params = erl_params
+        
         train(start_date=train_start_date,
             end_date=train_end_date,
             ticker_list=ticker_list,
@@ -59,7 +65,7 @@ def train_and_test(
             API_KEY=API_KEY,
             API_SECRET=API_SECRET,
             API_BASE_URL=API_BASE_URL,
-            erl_params=ERL_PARAMS,
+            erl_params=curr_params,
             cwd=f'./log/{MODEL_IDX}',  # current_working_dir
             wandb=False,
             break_step=1e7)
