@@ -97,13 +97,13 @@ def backtest_plot_v2(
     # df["date"] = pd.Timestamp(df["date"]).tz_localize("America/New_York")
     # df["date"] = df["date"].tz_localize("America/New_York")
     test_returns = get_daily_return(df, value_col_name=value_col_name)
-    test_returns.fillna(0, method='bfill', inplace=True)  # the first day is nan
+    test_returns.fillna(0, inplace=True)  # the first day is nan
 
     baseline_df["date"] = pd.to_datetime(baseline_df["date"], format="%Y-%m-%d")
     baseline_df = pd.merge(df[["date"]], baseline_df, how="left", on="date")
     # baseline_df = baseline_df.fillna(method="ffill").fillna(method="bfill")
     baseline_returns = get_daily_return(baseline_df, value_col_name="close")
-    baseline_returns.fillna(0, method='bfill', inplace=True) # the first day is nan
+    baseline_returns.fillna(0, inplace=True) # the first day is nan
 
     with pyfolio.plotting.plotting_context(font_scale=1.1):
         # this will return figs: https://github.com/quantopian/pyfolio/blob/master/pyfolio/tears.py ; create_full_tear_sheet will not
