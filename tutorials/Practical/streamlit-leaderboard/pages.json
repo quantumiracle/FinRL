@@ -3,12 +3,18 @@
         "page_script_hash": "a8679a2d06f88f7fdf5c80d2679bdc2b",
         "page_name": "app",
         "icon": "",
-        "script_path": "/home/quantumiracle/research/FinRL/tutorials/3-Practical/streamlit-leaderboard/src/app.py"
+        "script_path": "/home/ubuntu/projects/rl/FinRL/tutorials/Practical/streamlit-leaderboard/src/app.py"
     },
-    "87eef944d788026ecac77d68ff744953": {
-        "page_script_hash": "87eef944d788026ecac77d68ff744953",
+    "8c22608e39798ea2333595d2e7a12905": {
+        "page_script_hash": "8c22608e39798ea2333595d2e7a12905",
+        "page_name": "evaluate",
+        "icon": "",
+        "script_path": "/home/ubuntu/projects/rl/FinRL/tutorials/Practical/streamlit-leaderboard/src/pages/evaluate.py"
+    },
+    "385e3e422e65e859208f9ae0585d1b2e": {
+        "page_script_hash": "385e3e422e65e859208f9ae0585d1b2e",
         "page_name": "upload",
         "icon": "",
-        "script_path": "/home/quantumiracle/research/FinRL/tutorials/3-Practical/streamlit-leaderboard/src/pages/upload.py"
+        "script_path": "/home/ubuntu/projects/rl/FinRL/tutorials/Practical/streamlit-leaderboard/src/pages/upload.py"
     }
 }
