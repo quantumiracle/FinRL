@@ -101,6 +101,8 @@ if __name__ == "__main__":
     save_dir = f"./log/"
 
     st.header("FinRL GUI", anchor=None)
+
+    ########################## Train ################################
     st.subheader("Train", anchor=None)
     StockPool = st.selectbox(
         "Select a stock pool",
@@ -217,6 +219,8 @@ if __name__ == "__main__":
         # wandb=False,
         # break_step=1e7)
 
+
+    ########################## BackTest ################################
     st.subheader("BackTest", anchor=None)
     TestStartDate = st.date_input(
         "Select a start date for backtest", value=dt.date(2022, 6, 1)
@@ -244,9 +248,11 @@ if __name__ == "__main__":
         os.mkdir(save_dir)
     for filename in os.listdir(save_dir):
         # check if the item is a directory
-        if os.path.isdir(os.path.join(save_dir, filename)):
-            # print(os.path.join(save_path, filename))
-            ckpt_list.append(filename)
+        if os.path.isdir(os.path.join(save_dir, filename)):  # date folder
+            for f in os.listdir(os.path.join(save_dir, filename)):
+                if os.path.isdir(os.path.join(save_dir, filename, f)):
+                    ckpt_list.append(os.path.join(filename, f))
+
     SelectedCKPT = st.selectbox(
         "Select checkpoint", ckpt_list, key=4
     )  # select one ckpt
@@ -288,7 +294,7 @@ if __name__ == "__main__":
             API_SECRET=API_SECRET,
             API_BASE_URL=API_BASE_URL,
             #       erl_params=ERL_PARAMS,
-            cwd=save_path,  # current_working_dir
+            cwd=os.path.join(save_path, "process/"),  # current_working_dir
             if_plot=True,  # to return a dataframe for backtest_plot
             break_step=1e7,
         )
@@ -319,6 +325,7 @@ if __name__ == "__main__":
         st.subheader("BackTest Results", anchor=None)
         st.image(image, caption="Results")
 
+    ########################## Compare ################################
     st.subheader("Compare", anchor=None)
     CompareStartDate = st.date_input(
         "Select a start date for compare", value=dt.date(2022, 6, 1)
@@ -345,8 +352,10 @@ if __name__ == "__main__":
         os.mkdir(save_dir)
     for filename in os.listdir(save_dir):
         # check if the item is a directory
-        if os.path.isdir(os.path.join(save_dir, filename)):
-            ckpt_list.append(filename)
+        if os.path.isdir(os.path.join(save_dir, filename)):  # date folder
+            for f in os.listdir(os.path.join(save_dir, filename)):
+                if os.path.isdir(os.path.join(save_dir, filename, f)):
+                    ckpt_list.append(os.path.join(filename, f))
     # select multiple checkpoints
     SelectedCKPTs = st.multiselect("Select checkpoints", ckpt_list)
 
@@ -369,7 +378,7 @@ if __name__ == "__main__":
                 "API_KEY": API_KEY,
                 "API_SECRET": API_SECRET,
                 "API_BASE_URL": API_BASE_URL,
-                "cwd": save_path,  # current_working_dir
+                "cwd": os.path.join(save_path, "process/"),  # current_working_dir
                 "if_plot": True,  # to return a dataframe for backtest_plot
                 "break_step": 1e7,
             }

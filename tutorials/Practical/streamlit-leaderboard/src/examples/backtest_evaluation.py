@@ -97,7 +97,7 @@ class BacktestEvaluator(Evaluator):
             API_KEY=API_KEY,
             API_SECRET=API_SECRET,
             API_BASE_URL=API_BASE_URL,
-            cwd=model_path,
+            cwd=os.path.join(model_path, "process/"),
             if_plot=True,  # to return a dataframe for backtest_plot
             break_step=1e7)
         print("============== account_value ===========")
@@ -115,7 +115,7 @@ class BacktestEvaluator(Evaluator):
         print(stats)
 
         print("==============Compare to Baseline===========")
-        figs = backtest_plot(account_value, baseline_df)
+        figs, returns = backtest_plot_v2(account_value, baseline_df)
         os.makedirs(f'{self.get_backtest_output_dir(output_path, params)}', exist_ok=True)
         figs.savefig(f'{self.get_backtest_output_dir(output_path, params)}/backtest.png')
         return 1
