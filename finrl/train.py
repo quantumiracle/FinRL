@@ -13,9 +13,15 @@ from finrl.wandb import init_wandb
 import os
 import json
 import pandas as pd
+from datetime import date
 
 
 def clip_by_date(data, start_date, end_date):
+    if isinstance(start_date, date):
+        start_date = start_date.strftime("%Y-%m-%d")
+    if isinstance(end_date, date):
+        end_date = end_date.strftime("%Y-%m-%d")
+
     start_time = pd.Timestamp(start_date + " 00:00:00").tz_localize("America/New_York")
     end_time = pd.Timestamp(end_date + " 23:59:59").tz_localize("America/New_York")
     return data[(start_time <= data['timestamp']) & (data['timestamp'] <= end_time)]

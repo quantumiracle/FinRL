@@ -69,6 +69,8 @@ class BacktestSidebar:
             # step 1: get the list of models in MODEL_OUTPUT_DIR
             model_folders = os.listdir(MODEL_OUTPUT_DIR)
             
+            progress_value = 0
+            print(model_folders)
             with st.spinner('Wait for it...'):
                 progress_text = f"{len(model_folders)} models to backtest, please wait..."
                 progress_bar = st.sidebar.progress(0, text=progress_text)
@@ -80,6 +82,8 @@ class BacktestSidebar:
                         self._backtest_return_code[backtest_res] += 1
                         progress_value = (i + 1)/len(model_folders)
                         progress_bar.progress(progress_value, text=progress_text)
+                    else:
+                        print(f'Error: invalid model {model_path}')
             progress_bar.progress(progress_value, text=f"{len(model_folders)} backtest done!")
             st.success('Backtest Done!')
             if self._backtest_return_code[2] > 0:

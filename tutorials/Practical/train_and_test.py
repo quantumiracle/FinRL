@@ -5,10 +5,13 @@ from finrl.config import INDICATORS
 from finrl.meta.env_stock_trading.env_stocktrading_np import StockTradingEnv
 from finrl.plot import backtest_stats, backtest_plot, get_baseline, backtest_plot_v2, get_baseline_v2 # backtest_plot
 from private import API_KEY, API_SECRET, API_BASE_URL
+import os, json
 
-ticker_list = DOW_30_TICKER
-# ticker_list = eval('DOW_30_TICKER')
+StockPool = 'DOW_30_TICKER'
+NumStock = 30
+ticker_list = eval(StockPool)[: int(NumStock)]
 # ticker_list = CHINESE_STOCK_TICKER[:30]
+AlgoLib = ['elegantrl', 'rllib', 'stable_baselines3'][0]
 
 action_dim = len(ticker_list)
 candle_time_interval = '1Min'  # '1Min'
@@ -50,7 +53,48 @@ def train_and_test(
             curr_params = ERL_PARAMS
         else:
             curr_params = erl_params
-        
+        log_dict = {}
+
+        save_path = f'./log/{MODEL_IDX}'
+        training_args = {
+            "start_date": train_start_date,
+            "end_date": train_end_date,
+            "ticker_list": ticker_list,
+            "data_source": "alpaca",
+            "time_interval": candle_time_interval,
+            "technical_indicator_list": INDICATORS,
+            "drl_lib": AlgoLib,
+            "env": env,
+            "model_name": model_name,
+            "API_KEY": API_KEY,
+            "API_SECRET": API_SECRET,
+            "API_BASE_URL": API_BASE_URL,
+            "erl_params": curr_params,
+            "cwd": os.path.join(save_path, "process/"),  # current_working_dir
+            "wandb": False,  # wand be cannot be run in a subprocess
+            "break_step": 1e7,
+        }
+
+        # logging above info
+        log_dict["StockPool"] = StockPool
+        log_dict["NumStock"] = NumStock
+        log_dict["TickerList"] = training_args["ticker_list"]
+        log_dict["DataSource"] = training_args["data_source"]
+        log_dict["IndicatorList"] = training_args["technical_indicator_list"]
+        log_dict["Algo"] = model_name
+        log_dict["AlgoLib"] = AlgoLib
+        log_dict["TrainStartDate"] = train_start_date
+        log_dict["TrainEndDate"] = train_end_date
+        log_dict["TrainTradeInterval"] = candle_time_interval
+        log_dict["ErlParams"] = curr_params
+        log_dict["BreakStep"] = training_args["break_step"]
+
+        if not os.path.exists(save_path):
+            os.mkdir(save_path)
+        save_file = open(os.path.join(save_path, "conf.json"), "w")
+        json.dump(log_dict, save_file)
+        save_file.close()
+
         train(start_date=train_start_date,
             end_date=train_end_date,
             ticker_list=ticker_list,

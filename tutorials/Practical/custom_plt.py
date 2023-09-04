@@ -124,9 +124,9 @@ def create_returns_tear_sheet(returns, positions=None,
     plotting.plot_rolling_sharpe(
         returns, ax=ax_rolling_sharpe)
 
-    # Drawdowns  error: matplotlib.units.ConversionError: Failed to convert value(s) to axis units: (NaT, Timestamp('2022-12-30 00:00:00+0000', tz='UTC'))
-    # plotting.plot_drawdown_periods(
-    #     returns, top=5, ax=ax_drawdown)
+    # Drawdowns
+    plotting.plot_drawdown_periods(
+        returns, top=5, ax=ax_drawdown)
 
     plotting.plot_drawdown_underwater(
         returns=returns, ax=ax_underwater)
@@ -152,3 +152,23 @@ def create_returns_tear_sheet(returns, positions=None,
 
     if return_fig:
         return fig
+
+
+if __name__ == '__main__':
+    import pandas as pd
+    import pyfolio
+
+    test_returns, baseline_returns, = pd.read_csv('test_returns.csv'), pd.read_csv('baseline_returns.csv')
+    test_returns['date'] = pd.to_datetime(test_returns['date'])
+    baseline_returns['date'] = pd.to_datetime(baseline_returns['date'])
+    test_returns = test_returns.set_index('date')['daily_return']
+    baseline_returns = baseline_returns.set_index('date')['daily_return']
+
+    with pyfolio.plotting.plotting_context(font_scale=1.1):
+        # this will return figs: https://github.com/quantopian/pyfolio/blob/master/pyfolio/tears.py ; create_full_tear_sheet will not
+        figs = create_returns_tear_sheet(
+            returns=test_returns, benchmark_rets=baseline_returns, set_context=False, return_fig=True
+        )
+
+    figs.savefig(f'./backtest.pdf')
+    print(test_returns.sum())

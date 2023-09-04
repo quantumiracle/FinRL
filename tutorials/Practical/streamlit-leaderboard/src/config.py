@@ -60,7 +60,7 @@ ADMIN_USERNAME = 'admin'
 
 ALLOW_FIRST_LOGIN = False
 
-DEV_MODE = False
+DEV_MODE = True
 
 #--- for backtesting
 '''
@@ -111,7 +111,7 @@ BACKTEST_PARAMS = {
     'end_date': [
         st.sidebar.date_input, # streamlit element
         "Input the test end date", # prompt
-        datetime.date(2023, 1, 2), # default date
+        datetime.date(2022, 11, 30), # default date
     ],
     'baseline_ticker': [
         st.sidebar.selectbox, # streamlit element

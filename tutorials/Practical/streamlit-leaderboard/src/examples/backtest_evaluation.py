@@ -54,8 +54,14 @@ class BacktestEvaluator(Evaluator):
         res &= os.path.isdir(model_path)
         # test 2: it should contain conf.json
         res &= os.path.exists(os.path.join(model_path, 'conf.json'))
+        if not os.path.exists(os.path.join(model_path, 'conf.json')):
+            print(f'conf.json not exists in path: {model_path}')
         # test 3: it should contain actor.pth
         res &= os.path.exists(os.path.join(model_path, 'process', 'actor.pth'))
+        if not os.path.exists(os.path.join(model_path, 'process', 'actor.pth')):
+            print(f'actor.pth not exists in path: {model_path}/process')
+        # # test 3: it should contain actor.pth
+        # res &= os.path.exists(os.path.join(model_path, 'actor.pth'))
         return res
 
     def evaluate(self, model_path: Path, output_path: Path, params: Dict) -> int:
@@ -79,8 +85,8 @@ class BacktestEvaluator(Evaluator):
 
         # try:
         account_value = test(
-            start_date=params['start_date'],
-            end_date=params['end_date'],
+            start_date=params['start_date'].strftime("%Y-%m-%d"),
+            end_date=params['end_date'].strftime("%Y-%m-%d"),
             ticker_list=params['ticker_list'],
             data_source='alpaca',
             time_interval=params['candle_time_interval'],
@@ -99,17 +105,18 @@ class BacktestEvaluator(Evaluator):
 
         # baseline stats
         print("==============Get Baseline Stats===========")
-
-        baseline_df = get_baseline(            
+        baseline_df = get_baseline_v2(            
                 ticker = params['baseline_ticker'], 
-                start = params['start_date'],
-                end = params['end_date'])
+                start = params['start_date'].strftime("%Y-%m-%d"),
+                end = params['end_date'].strftime("%Y-%m-%d")
+        )
 
         stats = backtest_stats(baseline_df, value_col_name='close')
         print(stats)
 
         print("==============Compare to Baseline===========")
         figs = backtest_plot(account_value, baseline_df)
+        os.makedirs(f'{self.get_backtest_output_dir(output_path, params)}', exist_ok=True)
         figs.savefig(f'{self.get_backtest_output_dir(output_path, params)}/backtest.png')
         return 1
         # except:

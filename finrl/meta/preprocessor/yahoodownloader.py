@@ -73,7 +73,7 @@ class YahooDownloader:
         except NotImplementedError:
             print("the features are not supported currently")
         # create day of the week column (monday = 0)
-        data_df["day"] = data_df["date"].dt.dayofweek
+        data_df["day"] = pd.to_datetime(data_df["date"]).dt.dayofweek
         # convert date to standard string format, easy to filter
         data_df["date"] = data_df.date.apply(lambda x: x.strftime("%Y-%m-%d"))
         # drop missing data
