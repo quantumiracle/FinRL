@@ -6,6 +6,7 @@ from finrl.meta.env_stock_trading.env_stocktrading_np import StockTradingEnv
 from finrl.plot import backtest_stats, backtest_plot, get_baseline, backtest_plot_v2, get_baseline_v2 # backtest_plot
 from private import API_KEY, API_SECRET, API_BASE_URL
 import os, json
+from datetime import datetime
 
 StockPool = 'DOW_30_TICKER'
 NumStock = 30
@@ -54,8 +55,10 @@ def train_and_test(
         else:
             curr_params = erl_params
         log_dict = {}
-
-        save_path = f'./log/{MODEL_IDX}'
+        current_datetime = datetime.now()
+        formatted_date = current_datetime.strftime("%Y%m%d")
+        os.makedirs(f'./log/{formatted_date}', exist_ok=True)
+        save_path = f'./log/{formatted_date}/{MODEL_IDX}'
         training_args = {
             "start_date": train_start_date,
             "end_date": train_end_date,
@@ -95,24 +98,26 @@ def train_and_test(
         json.dump(log_dict, save_file)
         save_file.close()
 
-        train(start_date=train_start_date,
-            end_date=train_end_date,
-            ticker_list=ticker_list,
-            data_source='alpaca',
-            time_interval=candle_time_interval,
-            technical_indicator_list=INDICATORS,
-            drl_lib='elegantrl',
-            #       drl_lib='rllib',
-            #       drl_lib='stable_baselines3',
-            env=env,
-            model_name=model_name,
-            API_KEY=API_KEY,
-            API_SECRET=API_SECRET,
-            API_BASE_URL=API_BASE_URL,
-            erl_params=curr_params,
-            cwd=f'./log/{MODEL_IDX}',  # current_working_dir
-            wandb=False,
-            break_step=1e7)
+        train(**training_args)
+
+        # train(start_date=train_start_date,
+        #     end_date=train_end_date,
+        #     ticker_list=ticker_list,
+        #     data_source='alpaca',
+        #     time_interval=candle_time_interval,
+        #     technical_indicator_list=INDICATORS,
+        #     drl_lib='elegantrl',
+        #     #       drl_lib='rllib',
+        #     #       drl_lib='stable_baselines3',
+        #     env=env,
+        #     model_name=model_name,
+        #     API_KEY=API_KEY,
+        #     API_SECRET=API_SECRET,
+        #     API_BASE_URL=API_BASE_URL,
+        #     erl_params=curr_params,
+        #     cwd=f'./log/{MODEL_IDX}',  # current_working_dir
+        #     wandb=False,
+        #     break_step=1e7)
 
     account_value = test(start_date=test_start_date,
                          end_date=test_end_date,
