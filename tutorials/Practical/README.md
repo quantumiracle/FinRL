@@ -41,6 +41,15 @@ python train_and_test.py
 ```
 python nni_run.py
 ```
+All sweeping outputs including training configurations and models will be saved to `DATETIME/TrainStamp/` in a format of:
+```
+conf.json
+backtest.pdf
+process-
+       |-actor.pth
+       |-critic.pth
+       |-tensorboard
+```
 
 ### Streamlit On-Page Train/Test/Eval
 
@@ -57,6 +66,8 @@ streamlit run streamlit_train.py --server.fileWatcherType none
 ```
 cd streamlit-leaderboard
 streamlit run src/app.py
+## Or
+bash run.sh
 ```
 
 ### Crypto
