@@ -40,6 +40,8 @@ python train_and_test.py
 
 ```
 python nni_run.py
+# eval all runs
+python compare_results.py
 ```
 All sweeping outputs including training configurations and models will be saved to `DATETIME/TrainStamp/` in a format of:
 ```
