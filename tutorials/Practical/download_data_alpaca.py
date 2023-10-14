@@ -57,12 +57,12 @@ def download_data(
         data.to_pickle(save_path)
 
 
-start_date = '2019-1-1'
+# start_date = '2019-1-1'
+start_date = '2020-1-1'   # sp
+
 end_date = '2023-8-31'
 data_source = 'alpaca'
-model_name='ppo'
 data_path = 'data'
-MODEL_IDX = f'{model_name}_{start_date}_{end_date}'
 data_file_name = f'{ticker_name}_{data_source}_{start_date}_{end_date}.pkl'
 # data_file_name = f'CHI30_{data_source}_{start_date}_{end_date}.pkl'
 save_path = os.path.join(data_path, data_file_name)

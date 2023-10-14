@@ -150,7 +150,7 @@ def train_and_test(
 
     print("==============Compare to Baseline===========")
     figs, returns = backtest_plot_v2(account_value, baseline_df)
-    figs.savefig(f'./log/{MODEL_IDX}/backtest.pdf')
+    figs.savefig(f'./log/{formatted_date}/{MODEL_IDX}/backtest.pdf')
     return returns.sum()
 
 
