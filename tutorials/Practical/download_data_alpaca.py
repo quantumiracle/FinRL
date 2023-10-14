@@ -9,13 +9,13 @@ import numpy as np
 import pandas as pd
 
 
-# __all__ = ['SINGLE_TICKER', 'CHINESE_STOCK_TICKER', 'DOW_30_TICKER', \
+# __all__ = ['SINGLE_TICKER', 'CHINESE_STOCK_TICKER', 'DOW_30_TICKER','TECH_20_TICKER', \
 #     'NAS_100_TICKER', 'SP_500_TICKER', 'HSI_50_TICKER',\
 #     'SSE_50_TICKER', 'CSI_300_TICKER', 'CAC_40_TICKER',\
 #     'DAX_30_TICKER',  'TECDAX_TICKER',  'MDAX_50_TICKER',\
 #     'SDAX_50_TICKER', 'LQ45_TICKER',  'SRI_KEHATI_TICKER',\
 #     'FX_TICKER']
-ticker_name = 'SP_500_TICKER'
+ticker_name = 'TECH_20_TICKER'
 ticker_list = eval(ticker_name)
 
 # INDICATORS = [
@@ -60,7 +60,7 @@ def download_data(
 # start_date = '2019-1-1'
 start_date = '2020-1-1'   # sp
 
-end_date = '2023-8-31'
+end_date = '2023-9-30'
 data_source = 'alpaca'
 data_path = 'data'
 data_file_name = f'{ticker_name}_{data_source}_{start_date}_{end_date}.pkl'

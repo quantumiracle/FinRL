@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-__all__ = ['SINGLE_TICKER', 'CHINESE_STOCK_TICKER', 'DOW_30_TICKER', \
+__all__ = ['SINGLE_TICKER', 'CHINESE_STOCK_TICKER', 'DOW_30_TICKER', 'TECH_20_TICKER', \
     'NAS_100_TICKER', 'SP_500_TICKER', 'HSI_50_TICKER',\
     'SSE_50_TICKER', 'CSI_300_TICKER', 'CAC_40_TICKER',\
     'DAX_30_TICKER',  'TECDAX_TICKER',  'MDAX_50_TICKER',\
@@ -47,6 +47,30 @@ DOW_30_TICKER = [
     "DIS",
     "DOW",
 ]
+
+TECH_20_TICKER = [
+    "AAPL",
+    "MSFT",
+    "AMZN",
+    "GOOGL",
+    "FB",
+    "TSLA",
+    "NVDA",
+    "CRM",
+    "NFLX",
+    "PYPL",
+    "INTC",
+    "ORCL",
+    "IBM",
+    "CSCO",
+    "AMD",
+    "ZM",
+    "SQ",
+    "SNAP",
+    "TWTR",
+    "SHOP",
+]
+
 
 # Nasdaq 100 constituents at 2019/01
 NAS_100_TICKER = [

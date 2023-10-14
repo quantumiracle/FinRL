@@ -82,6 +82,8 @@ def _get_eval_value(path):
     # MODEL_IDX = f'{model_name}_{start_date}_{end_date}'
 
     env = StockTradingEnv
+    initial_account_value = 100000.0
+
     account_value = test(start_date=EVAL_START_DATE,
                          end_date=EVAL_END_DATE,
                          ticker_list=ticker_list,
@@ -99,7 +101,8 @@ def _get_eval_value(path):
                          cwd=os.path.join(path, 'process/'),  # current_working_dir
                          if_plot=False,  # to return a dataframe for backtest_plot
                          break_step=1e7)
-    return account_value[-1] / 100000
+    return_ratio = account_value[-1] / initial_account_value
+    return return_ratio
 
 
 if __name__ == "__main__":
@@ -115,13 +118,13 @@ if __name__ == "__main__":
     # dir_list = ['ppo_2019-01-01_2023-08-31_2023-9-4-16-45-29']
 
     # get path result dict
-    res = get_top_n_path(dir_list, 5, eval_log_dir=eval_log_dir)
+    res = get_top_n_path(dir_list, 50, eval_log_dir=eval_log_dir)
     # res = filter_ability_path(dir_list, 0.8)
     for r in res.items():
         print(r)
 
     # copy dir to target path
-    tar_path = os.path.join(os.path.dirname(__file__), f'/log/selected_with_{eval_log_name}', )
+    tar_path = os.path.join(os.path.dirname(__file__), f'./log/selected_with_{eval_log_name}', )
     full_path_list = list(res.keys())
     full_tar_list = [p.replace(log_path, tar_path) for p in full_path_list]
 

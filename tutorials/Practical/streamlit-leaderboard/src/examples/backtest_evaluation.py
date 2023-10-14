@@ -82,7 +82,7 @@ class BacktestEvaluator(Evaluator):
 
     def _evaluate_backtest(self, model_path: Path, output_path: Path, params: Dict) -> int:
         env = StockTradingEnv
-
+        initial_account_value = 100000.0
         # try:
         account_value = test(
             start_date=params['start_date'].strftime("%Y-%m-%d"),
@@ -118,7 +118,10 @@ class BacktestEvaluator(Evaluator):
         figs, returns = backtest_plot_v2(account_value, baseline_df)
         os.makedirs(f'{self.get_backtest_output_dir(output_path, params)}', exist_ok=True)
         figs.savefig(f'{self.get_backtest_output_dir(output_path, params)}/backtest.png')
-        return 1
+        
+        return_ratio = account_value[-1] / initial_account_value
+        return return_ratio
+
         # except:
         #     print('!!! error in backtest !!!')
         #     return 2
