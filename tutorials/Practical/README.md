@@ -35,6 +35,11 @@ All-in-one script for train and test:
 ```
 python train_and_test.py
 ```
+### Download Dataset
+After specifying the ticker list:
+```
+python download_data_alpaca.py
+```
 
 ### Hyper-parameter Sweep
 
