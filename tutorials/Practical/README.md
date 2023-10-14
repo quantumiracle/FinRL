@@ -64,7 +64,11 @@ streamlit run streamlit_train.py --server.fileWatcherType none
 **!Note**: A separate subprocess will run for training, need to kill manually with the process ID!
 
 ### Streamlit Leaderboard
-
+If exists previous cache files, clear it:
+```
+rm -rf tutorials/Practical/streamlit-leaderboard/pages.json
+```
+Run
 ```
 cd streamlit-leaderboard
 streamlit run src/app.py
