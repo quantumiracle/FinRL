@@ -26,7 +26,7 @@ Run:
 
 ```bash
 python train_alpaca.py
-python test_alpaca.py
+python backtest_alpaca.py
 python deploy_alpaca.py
 ```
 
