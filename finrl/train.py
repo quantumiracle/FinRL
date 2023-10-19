@@ -54,8 +54,10 @@ def download_data(
     data_file_name = f'DOW_30_TICKER_alpaca_2019-1-1_2023-8-31.pkl'
     if 'CHI' in ticker_list:
         data_file_name = f'CHI30_alpaca_2019-1-1_2023-1-1.pkl'  
+    elif 'TECH' in ticker_list:
+        data_file_name = f'TECH_20_TICKER_alpaca_2020-1-1_2023-9-30.pkl'  
     elif 'NAS' in ticker_list:
-        data_file_name = f'NAS_100_TICKER_alpaca_2019-1-1_2023-8-31'
+        data_file_name = f'NAS_100_TICKER_alpaca_2019-1-1_2023-8-31.pkl'
 
     file_path = os.path.join(data_path, data_file_name)
     dp = DataProcessor(data_source, **kwargs)

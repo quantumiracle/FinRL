@@ -5,7 +5,7 @@ import nni
 
 test_start_date = '2022-12-1'
 test_end_date = '2023-1-1'
-baseline_ticker = 'AXP'
+# baseline_ticker = 'AXP'  # use first stock in each ticker_list as baseline_ticker
 
 ERL_PARAMS = {
     "learning_rate": 3e-6,
@@ -53,7 +53,7 @@ def nni_eval(params):
     ERL_PARAMS['net_dimension'] = net_dimension
 
     value = train_and_test(train_start_date, train_end_date, test_start_date, test_end_date, ticker_list, candle_time_interval,
-        baseline_ticker, model_name, MODEL_IDX, to_train=True, erl_params=ERL_PARAMS)
+        ticker_list[0], model_name, MODEL_IDX, to_train=True, erl_params=ERL_PARAMS)
     return value
 
 

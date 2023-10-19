@@ -106,7 +106,7 @@ if __name__ == "__main__":
     st.subheader("Train", anchor=None)
     StockPool = st.selectbox(
         "Select a stock pool",
-        ["DOW_30_TICKER", "CHINESE_STOCK_TICKER", "NAS_100_TICKER", "SP_500_TICKER"],
+        ["DOW_30_TICKER", "TECH_20_TICKER", "CHINESE_STOCK_TICKER", "NAS_100_TICKER", "SP_500_TICKER"],
     )
     NumStock = st.slider("Select the number of stocks to trade", 1, 50, 30)
     Algo = st.selectbox("Select an algorithm", ["PPO", "TD3", "SAC"])

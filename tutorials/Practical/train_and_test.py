@@ -49,16 +49,19 @@ def train_and_test(
         to_train=False,
         erl_params=None,
 ):  
+    current_datetime = datetime.now()
+    formatted_date = current_datetime.strftime("%Y%m%d")
+    os.makedirs(f'./log/{formatted_date}', exist_ok=True)
+    save_path = f'./log/{formatted_date}/{MODEL_IDX}'
+    os.makedirs(save_path, exist_ok=True)
+
     if to_train:
         if erl_params is None:
             curr_params = ERL_PARAMS
         else:
             curr_params = erl_params
         log_dict = {}
-        current_datetime = datetime.now()
-        formatted_date = current_datetime.strftime("%Y%m%d")
-        os.makedirs(f'./log/{formatted_date}', exist_ok=True)
-        save_path = f'./log/{formatted_date}/{MODEL_IDX}'
+
         training_args = {
             "start_date": train_start_date,
             "end_date": train_end_date,
@@ -151,10 +154,15 @@ def train_and_test(
     print("==============Compare to Baseline===========")
     figs, returns = backtest_plot_v2(account_value, baseline_df)
     figs.savefig(f'./log/{formatted_date}/{MODEL_IDX}/backtest.pdf')
-    return returns.sum()
+    # return returns.sum()
+    if isinstance(account_value, list): # if_plot = False
+        return account_value[-1]
+    else:
+        return account_value['account_value'].iloc[-1]
 
 
 
-if __name__ == '__main__':
-    train_and_test(train_start_date, train_end_date, test_start_date, test_end_date, ticker_list, candle_time_interval, 
+if __name__ == '__main__':  
+    value = train_and_test(train_start_date, train_end_date, test_start_date, test_end_date, ticker_list, candle_time_interval, 
     baseline_ticker, model_name, MODEL_IDX, )
+    print('final value: ', value)
