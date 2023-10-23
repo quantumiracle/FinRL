@@ -195,6 +195,8 @@ def cal_returns_tear_sheet(returns):
     # annual_returns
     ann_ret_df = ep.aggregate_returns(returns, 'yearly')
     result['yearly_returns'] = ann_ret_df
+
+    # TODO rolling_beta: requires baseline
     return result
 
 
