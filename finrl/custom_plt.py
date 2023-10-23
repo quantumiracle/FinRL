@@ -2,6 +2,9 @@ from pyfolio import plotting, utils
 import empyrical as ep
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+from pyfolio import timeseries
 
 
 @plotting.customize
@@ -152,3 +155,53 @@ def create_returns_tear_sheet(returns, positions=None,
 
     if return_fig:
         return fig
+
+
+def cal_returns_tear_sheet(returns):
+    result = dict()
+    # Cumulative returns
+    cumulative_returns = ep.cum_returns(returns, 1.0)
+    result['returns'] = returns
+    result['cumulative_returns'] = cumulative_returns
+
+    # rolling_volatility
+
+    APPROX_BDAYS_PER_MONTH = 21
+    rolling_window = APPROX_BDAYS_PER_MONTH * 6  # minimum time
+    rolling_vol_ts = timeseries.rolling_volatility(
+        returns, rolling_window)
+    result['rolling_volatility'] = rolling_vol_ts
+
+    # rolling_sharpe
+    rolling_sharpe_ts = timeseries.rolling_sharpe(
+        returns, rolling_window)
+    result['rolling_sharpe'] = rolling_sharpe_ts
+
+    # drawdown
+    top = 10
+    df_drawdowns = timeseries.gen_drawdown_table(returns, top=top)
+    result['drawdowns'] = df_drawdowns
+
+    # drawdown underwater
+    df_cum_rets = ep.cum_returns(returns, starting_value=1.0)
+    running_max = np.maximum.accumulate(df_cum_rets)
+    underwater = -100 * ((running_max - df_cum_rets) / running_max)
+    result['drawdown_underwater'] = underwater
+
+    # monthly_returns
+    monthly_ret_table = ep.aggregate_returns(returns, 'monthly')
+    result['monthly_returns'] = monthly_ret_table
+
+    # annual_returns
+    ann_ret_df = ep.aggregate_returns(returns, 'yearly')
+    result['yearly_returns'] = ann_ret_df
+    return result
+
+
+
+if __name__ == "__main__":
+    test_returns = pd.read_csv('test_returns.csv')
+    test_returns['date'] = pd.to_datetime(test_returns['date'])
+    test_returns = test_returns.set_index('date')['daily_return']
+    result = cal_returns_tear_sheet(test_returns)
+    print(result)

@@ -13,7 +13,7 @@ from pyfolio import timeseries
 from finrl import config
 from finrl.meta.preprocessor.yahoodownloader import YahooDownloader
 from finrl.train import load_df
-from .custom_plt import create_returns_tear_sheet
+from .custom_plt import create_returns_tear_sheet, cal_returns_tear_sheet
 
 
 def get_daily_return(df, value_col_name="account_value"):
@@ -110,6 +110,8 @@ def backtest_plot_v2(
         figs = create_returns_tear_sheet(
             returns=test_returns, benchmark_rets=baseline_returns, set_context=False, return_fig=True
         )
+
+    dict_results = cal_returns_tear_sheet(returns=test_returns)
 
     return figs, test_returns
 
