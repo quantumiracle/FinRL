@@ -1,6 +1,7 @@
 import shutil
 
 import numpy as np
+import pandas as pd
 import os
 import pickle
 from finrl.test import test
@@ -21,13 +22,13 @@ def _get_full_path(dir_name_list):
     return full_path_list
 
 
-def get_top_n_path(dir_name_list, top_n, save_log=True, eval_log_dir=None):
+def get_top_n_path(dir_name_list, top_n, save_log=True, eval_log_dir=None, trade_log_dir=None):
     full_path_list = _get_full_path(dir_name_list)
     num_models = len(full_path_list)
     print("Number of models: ", num_models)
     path2value = {}
     for i, p in enumerate(full_path_list):
-        path2value[p] = get_eval_value(p)
+        path2value[p] = get_eval_value(p, trade_log_dir)
         print(f"Progress: {i+1}/{num_models}\n================================")
     result = dict(sorted(path2value.items(), key=lambda x: x[1])[: top_n])
     if save_log:
@@ -46,17 +47,13 @@ def filter_ability_path(dir_name_list, v):
     return result
     # return list(result.values())
 
-
-# for p in full_path_list:
-#     print(p)
-
-def get_eval_value(path):
+def get_eval_value(path, trade_log_dir=None):
     file_path = os.path.join(path, 'process', 'recorder.npy')
     if not os.path.isfile(file_path):
         return -np.inf
     # return np.random.random()  # return random value for debug
     # return _get_training_reward(path)  # return value base on last serval training rewards
-    return _get_eval_value(path)  # return value base on Real-time test
+    return _get_eval_value(path, trade_log_dir)  # return value base on Real-time test
 
 
 def _get_training_reward(path):
@@ -75,7 +72,7 @@ def _get_training_reward(path):
     return np.average(data[-10:, 1])  # last 10 times average
 
 
-def _get_eval_value(path):
+def _get_eval_value(path, trade_log_dir=None):
     ticker_list = DOW_30_TICKER
     candle_time_interval = '5Min'  # '1Min'
 
@@ -84,7 +81,7 @@ def _get_eval_value(path):
     env = StockTradingEnv
     initial_account_value = 100000.0
 
-    account_value = test(start_date=EVAL_START_DATE,
+    account_value, log = test(start_date=EVAL_START_DATE,
                          end_date=EVAL_END_DATE,
                          ticker_list=ticker_list,
                          data_source='alpaca',
@@ -100,9 +97,27 @@ def _get_eval_value(path):
                          # cwd=f'./papertrading_erl/{MODEL_IDX}',  # current_working_dir
                          cwd=os.path.join(path, 'process/'),  # current_working_dir
                          if_plot=False,  # to return a dataframe for backtest_plot
+                         return_log=True,
                          break_step=1e7)
+    # print('account value: ', account_value)
+    rows = len(log['total_value'])
+    trading_log = {
+        'time': log['time'][:rows],
+        'total_value': log['total_value'],
+    }
+    asset_value = np.array(log['asset']) # (days, ticker)
+
+    for i, ticker in enumerate(ticker_list):
+        trading_log[ticker] = asset_value[:, i]
+    trading_log_df = pd.DataFrame(trading_log)
+    # import pdb; pdb.set_trace()
+    if trade_log_dir is not None:
+        path_prefix = path.split('/')[-1]
+        trade_log_path = os.path.join(trade_log_dir, f'{path_prefix}.csv')
+        trading_log_df.to_csv(trade_log_path, index=False)
+        print(f'Save trading log for evaluation to: {trade_log_path}')
     return_ratio = account_value[-1] / initial_account_value
-    return return_ratio
+    return return_ratio, trading_log_df
 
 
 if __name__ == "__main__":
@@ -111,14 +126,16 @@ if __name__ == "__main__":
     
     eval_log_name = f'eval_{EVAL_START_DATE}_{EVAL_END_DATE}'
     eval_log_dir = f'./log/{eval_log_name}'
-    os.makedirs(eval_log_dir, exist_ok=True)
+    os.makedirs(eval_log_dir, exist_ok=True)    
+    trade_log_dir = eval_log_dir
 
     # dir_list = ['20230924']
-    dir_list = ['with_conf']  # run idex under ./log/
+    dir_list = ['20231016']
+    # dir_list = ['with_conf']  # run idex under ./log/
     # dir_list = ['ppo_2019-01-01_2023-08-31_2023-9-4-16-45-29']
 
     # get path result dict
-    res = get_top_n_path(dir_list, 50, eval_log_dir=eval_log_dir)
+    res = get_top_n_path(dir_list, 50, eval_log_dir=eval_log_dir, trade_log_dir=trade_log_dir)
     # res = filter_ability_path(dir_list, 0.8)
     for r in res.items():
         print(r)

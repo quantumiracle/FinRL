@@ -21,6 +21,7 @@ def test(
     model_name,
     if_vix=True,
     if_plot=False,
+    return_log=False,
     **kwargs,
 ):
     env_config = download_data(    
@@ -46,12 +47,14 @@ def test(
     if drl_lib == "elegantrl":
         from finrl.agents.elegantrl.models import DRLAgent as DRLAgent_erl
 
-        episode_total_assets = DRLAgent_erl.DRL_prediction(
+        episode_total_assets, log = DRLAgent_erl.DRL_prediction(
             model_name=model_name,
             cwd=cwd,
             net_dimension=net_dimension,
             environment=env_instance,
+            return_log=return_log
         )
+        log['time'] = env_config['date_array'].unique()  # fill timestamp
     elif drl_lib == "rllib":
         from finrl.agents.rllib.models import DRLAgent as DRLAgent_rllib
 
@@ -101,9 +104,9 @@ def test(
         df_account_value = pd.DataFrame(
             {"date": dates, "account_value": values}
             )
-        return df_account_value
+        return df_account_value, log
     else:
-        return episode_total_assets
+        return episode_total_assets, log
 
 
 

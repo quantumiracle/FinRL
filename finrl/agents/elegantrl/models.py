@@ -11,6 +11,7 @@ from elegantrl.agents import AgentTD3
 from elegantrl.train.config import Arguments
 from elegantrl.train.run import init_agent
 from elegantrl.train.run import train_and_evaluate
+import copy
 
 # from elegantrl.agents import AgentA2C
 
@@ -84,7 +85,7 @@ class DRLAgent:
         train_and_evaluate(model)
 
     @staticmethod
-    def DRL_prediction(model_name, cwd, net_dimension, environment):
+    def DRL_prediction(model_name, cwd, net_dimension, environment, return_log=False):
         if model_name not in MODELS:
             raise NotImplementedError("NotImplementedError")
         agent = MODELS[model_name]
@@ -100,6 +101,12 @@ class DRLAgent:
         except BaseException:
             raise ValueError("Fail to load agent!")
 
+        trading_log = {
+            'asset': [],
+            'total_value': [],
+            'action': []
+        }
+
         # test on the testing env
         _torch = torch
         state = environment.reset()
@@ -112,6 +119,14 @@ class DRLAgent:
                 action = (
                     a_tensor.detach().cpu().numpy()[0]
                 )  # not need detach(), because with torch.no_grad() outside
+
+                trading_log['asset'].append(copy.deepcopy(environment.stocks))  # otherwise keep appending copies
+                if i == 0 :
+                    trading_log['total_value'].append(environment.initial_total_asset)
+                else:
+                    trading_log['total_value'].append(total_asset)
+                trading_log['action'].append(action)
+
                 state, reward, done, _ = environment.step(action)
                 total_asset = (
                     environment.amount
@@ -119,6 +134,7 @@ class DRLAgent:
                         environment.price_ary[environment.day] * environment.stocks
                     ).sum()
                 )
+   
                 episode_total_assets.append(total_asset)
                 episode_return = total_asset / environment.initial_total_asset
                 episode_returns.append(episode_return)
@@ -127,4 +143,7 @@ class DRLAgent:
         print("Test Finished!")
         # return episode total_assets on testing data
         print("episode_return", episode_return)
-        return episode_total_assets
+        if return_log:
+            return episode_total_assets, trading_log
+        else:
+            return episode_total_assets, None

@@ -122,6 +122,8 @@ def train_and_test(
         #     wandb=False,
         #     break_step=1e7)
 
+    initial_account_value = 100000.0
+
     account_value = test(start_date=test_start_date,
                          end_date=test_end_date,
                          ticker_list=ticker_list,
@@ -135,8 +137,9 @@ def train_and_test(
                          API_SECRET=API_SECRET,
                          API_BASE_URL=API_BASE_URL,
                          #       erl_params=ERL_PARAMS,
-                         cwd=f'./log/{MODEL_IDX}',  # current_working_dir
+                         cwd=os.path.join(save_path, "process/"),  # current_working_dir
                          if_plot=True,  # to return a dataframe for backtest_plot
+                         return_log=False,
                          break_step=1e7)
     print("============== account_value ===========")
     print(account_value)
@@ -153,12 +156,12 @@ def train_and_test(
 
     print("==============Compare to Baseline===========")
     figs, returns = backtest_plot_v2(account_value, baseline_df)
-    figs.savefig(f'./log/{formatted_date}/{MODEL_IDX}/backtest.pdf')
+    figs.savefig(os.path.join(save_path, "backtest.pdf"))
     # return returns.sum()
     if isinstance(account_value, list): # if_plot = False
-        return account_value[-1]
+        return account_value[-1] / initial_account_value
     else:
-        return account_value['account_value'].iloc[-1]
+        return account_value['account_value'].iloc[-1] / initial_account_value
 
 
 

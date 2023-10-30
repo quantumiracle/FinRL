@@ -116,6 +116,7 @@ class DRLAgent:
         price_array,
         tech_array,
         turbulence_array,
+        return_log=False,
         agent_path="./test_ppo/checkpoint_000100/checkpoint-100",
     ):
         if model_name not in MODELS:
@@ -180,4 +181,5 @@ class DRLAgent:
         ray.shutdown()
         print("episode return: " + str(episode_return))
         print("Test Finished!")
+
         return episode_total_assets

@@ -64,5 +64,5 @@ for t in range(1):
     score: float = nni_eval(params)
     print('score', score)
     # nni.report_intermediate_result(score)  # learning curve
-nni.report_final_result(score)
+nni.report_final_result(score)  # default metric
 
