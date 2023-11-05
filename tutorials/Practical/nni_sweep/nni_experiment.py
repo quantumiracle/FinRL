@@ -2,6 +2,7 @@ from tutorials.Practical.train_and_test import *
 from finrl.config_tickers import *
 import time
 import nni
+import argparse
 
 test_start_date = '2022-12-1'
 test_end_date = '2023-1-1'
@@ -53,9 +54,14 @@ def nni_eval(params):
     ERL_PARAMS['net_dimension'] = net_dimension
 
     value = train_and_test(train_start_date, train_end_date, test_start_date, test_end_date, ticker_list, candle_time_interval,
-        ticker_list[0], model_name, MODEL_IDX, to_train=True, erl_params=ERL_PARAMS)
+        ticker_list[0], model_name, MODEL_IDX, to_train=True, erl_params=ERL_PARAMS, date_prefix=args.date)
     return value
 
+parser = argparse.ArgumentParser(description="Launch configurations.")
+
+# add arguments
+parser.add_argument("--date", type=str, default='', help="An argument which takes a value from a set of choices")
+args = parser.parse_args()
 
 params = nni.get_next_parameter()
 

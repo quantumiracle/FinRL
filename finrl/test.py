@@ -54,7 +54,8 @@ def test(
             environment=env_instance,
             return_log=return_log
         )
-        log['time'] = env_config['date_array'].unique()  # fill timestamp
+        if log is not None:
+            log['time'] = env_config['date_array'].unique()  # fill timestamp
     elif drl_lib == "rllib":
         from finrl.agents.rllib.models import DRLAgent as DRLAgent_rllib
 

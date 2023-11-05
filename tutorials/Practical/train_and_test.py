@@ -48,9 +48,13 @@ def train_and_test(
         MODEL_IDX,
         to_train=False,
         erl_params=None,
+        date_prefix=None,
 ):  
-    current_datetime = datetime.now()
-    formatted_date = current_datetime.strftime("%Y%m%d")
+    if date_prefix is None:
+        current_datetime = datetime.now()
+        formatted_date = current_datetime.strftime("%Y%m%d")
+    else:
+        formatted_date = date_prefix
     os.makedirs(f'./log/{formatted_date}', exist_ok=True)
     save_path = f'./log/{formatted_date}/{MODEL_IDX}'
     os.makedirs(save_path, exist_ok=True)

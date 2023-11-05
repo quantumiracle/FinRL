@@ -6,3 +6,5 @@ yfinance==0.2.3
 
 local run:
 streamlit run streamlit_train.py --server.fileWatcherType none
+
+nnictl experiment list --all
