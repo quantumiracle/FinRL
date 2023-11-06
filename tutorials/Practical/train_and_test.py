@@ -128,7 +128,7 @@ def train_and_test(
 
     initial_account_value = 100000.0
 
-    account_value = test(start_date=test_start_date,
+    account_value, log = test(start_date=test_start_date,
                          end_date=test_end_date,
                          ticker_list=ticker_list,
                          data_source='alpaca',
@@ -143,7 +143,7 @@ def train_and_test(
                          #       erl_params=ERL_PARAMS,
                          cwd=os.path.join(save_path, "process/"),  # current_working_dir
                          if_plot=True,  # to return a dataframe for backtest_plot
-                         return_log=False,
+                         return_log=False,  # still return a log placeholder
                          break_step=1e7)
     print("============== account_value ===========")
     print(account_value)
