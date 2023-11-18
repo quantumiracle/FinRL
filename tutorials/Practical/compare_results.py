@@ -5,7 +5,7 @@ import pandas as pd
 import os
 import pickle
 from finrl.test import test
-from finrl.config_tickers import DOW_30_TICKER
+from finrl.config_tickers import *
 from finrl.config import INDICATORS
 from finrl.meta.env_stock_trading.env_stocktrading_np import StockTradingEnv
 from private import API_KEY, API_SECRET, API_BASE_URL
@@ -73,7 +73,7 @@ def _get_training_reward(path):
 
 
 def _get_eval_value(path, trade_log_dir=None):
-    ticker_list = DOW_30_TICKER
+    ticker_list = eval(EVAL_TICKER)
     candle_time_interval = '5Min'  # '1Min'
 
     # MODEL_IDX = f'{model_name}_{start_date}_{end_date}'
@@ -117,20 +117,23 @@ def _get_eval_value(path, trade_log_dir=None):
         trading_log_df.to_csv(trade_log_path, index=False)
         print(f'Save trading log for evaluation to: {trade_log_path}')
     return_ratio = account_value[-1] / initial_account_value
-    return return_ratio, trading_log_df
+    return return_ratio
 
 
 if __name__ == "__main__":
-    EVAL_START_DATE = '2022-11-1'
-    EVAL_END_DATE = '2023-1-1'
-    
-    eval_log_name = f'eval_{EVAL_START_DATE}_{EVAL_END_DATE}'
+    EVAL_START_DATE = '2023-1-1'
+    EVAL_END_DATE = '2023-8-1'
+    # EVAL_TICKER = 'DOW_30_TICKER'
+    EVAL_TICKER = 'TECH_20_TICKER'
+
+    eval_log_name = f'eval_{EVAL_TICKER}_{EVAL_START_DATE}_{EVAL_END_DATE}'
     eval_log_dir = f'./log/{eval_log_name}'
     os.makedirs(eval_log_dir, exist_ok=True)    
     trade_log_dir = eval_log_dir
 
     # dir_list = ['20230924']
-    dir_list = ['20231016']
+    # dir_list = ['20231112_Dow_30']
+    dir_list = ['20231107_Tech_20']
     # dir_list = ['with_conf']  # run idex under ./log/
     # dir_list = ['ppo_2019-01-01_2023-08-31_2023-9-4-16-45-29']
 

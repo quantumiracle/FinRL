@@ -12,6 +12,7 @@ from collections import defaultdict
 def test(
     start_date,
     end_date,
+    ticker_list_name,
     ticker_list,
     data_source,
     time_interval,
@@ -19,6 +20,7 @@ def test(
     drl_lib,
     env,
     model_name,
+    initial_capital=1e5,
     if_vix=True,
     if_plot=False,
     return_log=False,
@@ -27,6 +29,7 @@ def test(
     env_config = download_data(    
         start_date,
         end_date,
+        ticker_list_name,
         ticker_list,
         data_source,
         time_interval,
@@ -38,7 +41,7 @@ def test(
     tech_array = env_config["tech_array"]
     turbulence_array = env_config["turbulence_array"]
 
-    env_instance = env(config=env_config)
+    env_instance = env(config=env_config, initial_capital=initial_capital)
 
     # load elegantrl needs state dim, action dim and net dim
     net_dimension = kwargs.get("net_dimension", 2**7)

@@ -8,3 +8,4 @@ local run:
 streamlit run streamlit_train.py --server.fileWatcherType none
 
 nnictl experiment list --all
+nnictl stop '4u7lxhp1'

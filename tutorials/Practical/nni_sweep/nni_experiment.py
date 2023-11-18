@@ -1,41 +1,31 @@
 from tutorials.Practical.train_and_test import *
+from tutorials.Practical.config import ERL_PARAMS, NNI_TEST_START_DATE, NNI_TEST_END_DATE
 from finrl.config_tickers import *
 import time
 import nni
 import argparse
-
-test_start_date = '2022-12-1'
-test_end_date = '2023-1-1'
-# baseline_ticker = 'AXP'  # use first stock in each ticker_list as baseline_ticker
-
-ERL_PARAMS = {
-    "learning_rate": 3e-6,
-    "batch_size": 2048,
-    "gamma": 0.985,
-    "seed": 312,
-    "net_dimension": 512,
-    "target_step": 5000,
-    "eval_gap": 30,
-    "eval_times": 1,
-}
 
 def get_year_month(month_cnt):
     year = month_cnt // 12 + 2019
     month = month_cnt % 12 + 1
     return year, month
 
+def overwrite_params(default_dict, update_dict):
+    # overwrite the value in default_dict with update_dict if key exists in default_dict
+    default_dict = default_dict.copy()
+    for key in update_dict.keys():
+        if key in default_dict.keys():
+            default_dict[key] = update_dict[key]
+    return default_dict
 
 def nni_eval(params):
     time_start_month = params.pop("time_start_month")
     time_across_month = params.pop("time_across_month")
-    ticker_list = params.pop("ticker_list")
+    ticker_list_name = params.pop("ticker_list")
+    num_stocks = params.pop("num_stocks", int(1e5))  # by default use all stocks in list
     candle_time_interval = params.pop("candle_time_interval")
-
-    target_step = params.pop("target_step")
-    learning_rate = params.pop("learning_rate")
-    batch_size = params.pop("batch_size")
-    gamma = params.pop("gamma")
-    net_dimension = params.pop("net_dimension")
+    break_step = params.pop("break_step", int(1e7))
+    model_name = params.pop("model_name", 'ppo')
 
     train_start_date = '{}-{}-1'.format(*get_year_month(time_start_month))
     time_end_month = time_start_month + time_across_month
@@ -43,18 +33,15 @@ def nni_eval(params):
     train_end_date = '{}-{}-1'.format(*get_year_month(time_end_month))
 
     time_stamp = time.strftime('%Y%m%d-%H%M%S', time.localtime())
-    MODEL_IDX = f'{model_name}_{train_start_date}_{train_end_date}_{time_stamp}'
+    model_idx = f'{model_name}_{train_start_date}_{train_end_date}_{time_stamp}'
 
-    ticker_list = eval(ticker_list)
+    ticker_list = eval(ticker_list_name)[:num_stocks]
+    baseline_ticker = ticker_list[0]
 
-    ERL_PARAMS['target_step'] = target_step
-    ERL_PARAMS['learning_rate'] = learning_rate
-    ERL_PARAMS['batch_size'] = batch_size
-    ERL_PARAMS['gamma'] = gamma
-    ERL_PARAMS['net_dimension'] = net_dimension
+    erl_params = overwrite_params(ERL_PARAMS, params)
 
-    value = train_and_test(train_start_date, train_end_date, test_start_date, test_end_date, ticker_list, candle_time_interval,
-        ticker_list[0], model_name, MODEL_IDX, to_train=True, erl_params=ERL_PARAMS, date_prefix=args.date)
+    value = train_and_test(train_start_date, train_end_date, NNI_TEST_START_DATE, NNI_TEST_END_DATE, ticker_list_name, ticker_list, candle_time_interval,
+        baseline_ticker, model_name, model_idx, break_step=break_step, to_train=True, erl_params=erl_params, date_prefix=args.date)
     return value
 
 parser = argparse.ArgumentParser(description="Launch configurations.")

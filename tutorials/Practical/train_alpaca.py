@@ -8,7 +8,8 @@ from private import API_KEY, API_SECRET, API_BASE_URL
 import numpy as np
 import pandas as pd
 
-ticker_list = DOW_30_TICKER
+ticker_list_name = 'DOW_30_TICKER'
+ticker_list = eval(ticker_list_name)
 action_dim = len(ticker_list)
 candle_time_interval = '5Min'  # '1Min'
 
@@ -28,6 +29,7 @@ MODEL_IDX = f'{model_name}_{start_date}_{end_date}'
 if __name__ == "__main__":
         train(start_date = start_date, 
         end_date = end_date,
+        ticker_list_name = ticker_list_name,
         ticker_list = ticker_list, 
         data_source = 'alpaca',
         time_interval= candle_time_interval, 

@@ -40,6 +40,7 @@ def load_df(start_date, end_date, file_path='./data/DOW30_alpaca_2019-1-1_2023-1
 def download_data(
         start_date,
         end_date,
+        ticker_list_name,
         ticker_list,
         data_source,
         time_interval,
@@ -52,11 +53,11 @@ def download_data(
     data_path = './data'
     # data_file_name = f'DOW30_alpaca_2019-1-1_2023-1-1.pkl' 
     data_file_name = f'DOW_30_TICKER_alpaca_2019-1-1_2023-8-31.pkl'
-    if 'CHI' in ticker_list:
+    if 'CHI' in ticker_list_name:
         data_file_name = f'CHI30_alpaca_2019-1-1_2023-1-1.pkl'  
-    elif 'TECH' in ticker_list:
+    elif 'TECH' in ticker_list_name:
         data_file_name = f'TECH_20_TICKER_alpaca_2020-1-1_2023-9-30.pkl'  
-    elif 'NAS' in ticker_list:
+    elif 'NAS' in ticker_list_name:
         data_file_name = f'NAS_100_TICKER_alpaca_2019-1-1_2023-8-31.pkl'
 
     file_path = os.path.join(data_path, data_file_name)
@@ -105,6 +106,7 @@ def download_data(
 def train(
         start_date,
         end_date,
+        ticker_list_name,
         ticker_list,
         data_source,
         time_interval,
@@ -112,6 +114,7 @@ def train(
         drl_lib,
         env,
         model_name,
+        initial_capital=1e5,
         if_vix=True,
         wandb=False,
         **kwargs,
@@ -119,6 +122,7 @@ def train(
     env_config = download_data(
         start_date,
         end_date,
+        ticker_list_name,
         ticker_list,
         data_source,
         time_interval,
@@ -130,7 +134,7 @@ def train(
     tech_array = env_config["tech_array"]
     turbulence_array = env_config["turbulence_array"]
 
-    env_instance = env(config=env_config)
+    env_instance = env(config=env_config, initial_capital=initial_capital)
 
     # read parameters
     cwd = kwargs.get("cwd", "./" + str(model_name))
@@ -163,6 +167,7 @@ def train(
             'erl_params': erl_params,
             'start_date': start_date,
             'end_date': end_date,
+            'ticker_list_name': ticker_list_name,
             'ticker_list': ticker_list,
         }
         with open(os.path.join(cwd, 'params.json'), 'w') as f:
@@ -222,7 +227,7 @@ if __name__ == "__main__":
     train(
         start_date=TRAIN_START_DATE,
         end_date=TRAIN_END_DATE,
-        ticker_list=DOW_30_TICKER,
+        ticker_list_name=DOW_30_TICKER,
         data_source="yahoofinance",
         time_interval="1D",
         technical_indicator_list=INDICATORS,

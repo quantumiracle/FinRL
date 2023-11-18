@@ -9,7 +9,8 @@ from finrl.plot import backtest_stats, backtest_plot, get_daily_return, get_base
 from private import API_KEY, API_SECRET, API_BASE_URL
 from train_alpaca import MODEL_IDX
 
-ticker_list = DOW_30_TICKER
+ticker_list_name = 'DOW_30_TICKER'
+ticker_list = eval(ticker_list_name)
 action_dim = len(DOW_30_TICKER)
 candle_time_interval = '5Min'  # '1Min'
 
@@ -20,6 +21,7 @@ end_date = '2022-9-2'
 
 account_value = test(start_date = start_date, 
       end_date = end_date,
+      ticker_list_name = ticker_list_name,
       ticker_list = ticker_list, 
       data_source = 'alpaca',
       time_interval= candle_time_interval, 

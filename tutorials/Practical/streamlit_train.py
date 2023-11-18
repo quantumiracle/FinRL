@@ -56,6 +56,7 @@ def test_process(**kwargs):
     account_value = test(
         start_date=kwargs["start_date"],
         end_date=kwargs["end_date"],
+        ticker_list_name=kwargs["ticker_list_name"],
         ticker_list=kwargs["ticker_list"],
         data_source=kwargs["data_source"],
         time_interval=kwargs["time_interval"],
@@ -154,6 +155,7 @@ if __name__ == "__main__":
         training_args = {
             "start_date": TrainStartDate,
             "end_date": TrainEndDate,
+            "ticker_list_name": StockPool,
             "ticker_list": ticker_list,
             "data_source": "alpaca",
             "time_interval": TrainTradeInterval,
@@ -283,6 +285,7 @@ if __name__ == "__main__":
         account_value = test(
             start_date=TestStartDate,
             end_date=TestEndDate,
+            ticker_list_name = StockPool,
             ticker_list=ticker_list,
             data_source="alpaca",
             time_interval=TestTradeInterval,
@@ -368,6 +371,7 @@ if __name__ == "__main__":
             compare_args = {
                 "start_date": CompareStartDate,
                 "end_date": CompareEndDate,
+                "ticker_list_name": StockPool,
                 "ticker_list": ticker_list,
                 "data_source": "alpaca",
                 "time_interval": CompareTradeInterval,
