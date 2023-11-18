@@ -52,6 +52,10 @@ python nni_run.py
 # eval all runs
 python compare_results.py
 ```
+Check previous runs with id, all previous experiment ids can be checked with `python nnictl experiment list` or *All experiments* on the overview page:
+```
+python nni_view.py
+```
 All sweeping outputs including training configurations and models will be saved to `DATETIME/TrainStamp/` in a format of:
 ```
 conf.json
