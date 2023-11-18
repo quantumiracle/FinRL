@@ -42,7 +42,11 @@ python download_data_alpaca.py
 ```
 
 ### Hyper-parameter Sweep
-
+A quick unit test:
+```
+python nni_unit_test.py
+```
+Full run:
 ```
 python nni_run.py
 # eval all runs
