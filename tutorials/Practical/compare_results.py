@@ -83,6 +83,7 @@ def _get_eval_value(path, trade_log_dir=None):
 
     account_value, log = test(start_date=EVAL_START_DATE,
                          end_date=EVAL_END_DATE,
+                         ticker_list_name=EVAL_TICKER,
                          ticker_list=ticker_list,
                          data_source='alpaca',
                          time_interval=candle_time_interval,
@@ -133,7 +134,7 @@ if __name__ == "__main__":
 
     # dir_list = ['20230924']
     # dir_list = ['20231112_Dow_30']
-    dir_list = ['20231107_Tech_20']
+    dir_list = ['20231118_TECH_20_TICKER']
     # dir_list = ['with_conf']  # run idex under ./log/
     # dir_list = ['ppo_2019-01-01_2023-08-31_2023-9-4-16-45-29']
 
