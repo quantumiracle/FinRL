@@ -4,6 +4,7 @@ from finrl.config_tickers import *
 import time
 import nni
 import argparse
+import random
 
 def get_year_month(month_cnt):
     year = month_cnt // 12 + 2019
@@ -33,7 +34,9 @@ def nni_eval(params):
     train_end_date = '{}-{}-1'.format(*get_year_month(time_end_month))
 
     time_stamp = time.strftime('%Y%m%d-%H%M%S', time.localtime())
-    model_idx = f'{model_name}_{train_start_date}_{train_end_date}_{time_stamp}'
+    # Generate a random 5-digit integer
+    random_number = random.randint(10000, 99999)
+    model_idx = f'{model_name}_{train_start_date}_{train_end_date}_{time_stamp}_{random_number}'
 
     ticker_list = eval(ticker_list_name)[:num_stocks]
     baseline_ticker = ticker_list[0]

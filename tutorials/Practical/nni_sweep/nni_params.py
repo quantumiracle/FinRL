@@ -32,9 +32,9 @@ search_space = {
     # 'net_dimension': {'_type': 'choice', '_value': [128, 512, 1024]},
 
     # selected
-    'target_step': {'_type': 'choice', '_value': [2000]},
+    'target_step': {'_type': 'choice', '_value': [2000, 5000, 8000]},
     'learning_rate': {'_type': 'choice', '_value': [1e-4, 3e-4]},
     'batch_size': {'_type': 'choice', '_value': [2048]},
-    'gamma': {'_type': 'choice', '_value': [0.995]},
+    'gamma': {'_type': 'choice', '_value': [0.985, 0.99, 0.995]},
     'net_dimension': {'_type': 'choice', '_value': [128, 512]},
 }
