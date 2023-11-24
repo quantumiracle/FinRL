@@ -6,6 +6,8 @@ yfinance==0.2.3
 
 pandas==1.5.3
 
+streamlit==1.28.2
+
 pyfolio needs git clone installation from [source](https://github.com/quantopian/pyfolio), otherwise has error: https://github.com/quantopian/pyfolio/issues/682.
 
 ## Usage Instruction
