@@ -16,7 +16,7 @@ experiment.config.tuner.name = 'TPE'
 experiment.config.tuner.class_args['optimize_mode'] = 'maximize'
 experiment.config.training_service.use_active_gpu = True
 experiment.config.max_trial_number = 10000
-experiment.config.trial_concurrency = 20  # number of jobs to run in parallel
+experiment.config.trial_concurrency = 24  # number of jobs to run in parallel
 # experiment.run(8880)  # start new training
 experiment.run(8089)  # start new training
 

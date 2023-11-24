@@ -30,8 +30,10 @@ class Backtest:
             evaluated_model_folders = os.listdir(backtest_output_dir)
             total_evaluated_models = len(evaluated_model_folders)
         else:
+            evaluated_model_folders = []
             total_evaluated_models = 0
-        expander_text = f'{total_evaluated_models}/{total_models} ({total_evaluated_models/total_models:.2%}) models backtested'
+        # expander_text = f'{total_evaluated_models}/{total_models} ({total_evaluated_models/total_models:.2%}) models backtested'
+        expander_text = f'{total_evaluated_models} models backtested'
 
         # display info
         if total_evaluated_models == total_models:
@@ -90,9 +92,11 @@ class Backtest:
         backtest_output_dir = self.evaluator.get_backtest_output_dir(BACKTEST_DIR, params)
         if os.path.exists(backtest_output_dir):
             evaluated_model_folders = os.listdir(backtest_output_dir)
+            evaluated_model_folders = [i for i in evaluated_model_folders if os.path.isdir(os.path.join(backtest_output_dir, i))]
             # read the pickle file and parse the data for each model, then display it as a dataframe
             model_perf = []
             for model in evaluated_model_folders:
+                
                 # read the pickle file as a dictionary
                 pickle_file = os.path.join(backtest_output_dir, model, 'backtest.pkl')
                 with open(pickle_file, 'rb') as handle:
@@ -110,9 +114,8 @@ class Backtest:
             # if there's no evaluated model, we don't show anything
             pass
 
-    def display_backtest(self, params: dict):
 
-        st.markdown(f"# Backtest (Dev)")
+    def display_backtest(self, params: dict):
 
         self._get_model_info(params)
 

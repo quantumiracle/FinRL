@@ -17,7 +17,7 @@ sys.path.append("../..")
 
 # all necessary packages for finrl test
 from finrl.config import INDICATORS
-from finrl.config_tickers import DOW_30_TICKER
+from finrl.config_tickers import *
 from finrl.meta.env_stock_trading.env_stocktrading_np import StockTradingEnv
 from finrl.plot import backtest_stats, get_daily_return, get_baseline # backtest_plot
 from finrl.test import test
@@ -41,7 +41,7 @@ class BacktestEvaluator(Evaluator):
 
     @classmethod
     def metrics(cls) -> Tuple[Type[Metric], ...]:
-        return (CumulativeReturn)
+        return [CumulativeReturn]
 
     def get_backtest_output_dir(self, output_path: Path, params: Dict, model_path: Path=None) -> str:
         res = output_path
@@ -90,10 +90,12 @@ class BacktestEvaluator(Evaluator):
         env = StockTradingEnv
         initial_account_value = 100000.0
         try:
+            ticker_list = eval(params['ticker_list_name'])
             account_value, _ = test(
                 start_date=params['start_date'].strftime("%Y-%m-%d"),
                 end_date=params['end_date'].strftime("%Y-%m-%d"),
-                ticker_list=params['ticker_list'],
+                ticker_list_name=params['ticker_list_name'],
+                ticker_list=ticker_list,
                 data_source='alpaca',
                 time_interval=params['candle_time_interval'],
                 technical_indicator_list=INDICATORS,

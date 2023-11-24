@@ -106,19 +106,19 @@ BACKTEST_PARAMS = {
     'start_date': [
         st.sidebar.date_input, # streamlit element
         "Input the test start date", # prompt
-        datetime.date(2022, 6, 11), # default date
+        datetime.date(2023, 2, 1), # default date
     ],
     'end_date': [
         st.sidebar.date_input, # streamlit element
         "Input the test end date", # prompt
-        datetime.date(2022, 11, 30), # default date
+        datetime.date(2023, 8, 1), # default date
     ],
     'baseline_ticker': [
         st.sidebar.selectbox, # streamlit element
         "Select the baseline ticker that you want to compare!", # prompt
         DOW_30_TICKER, # list to select
     ],
-    'ticker_list': [
+    'ticker_list_name': [
         st.sidebar.selectbox, # streamlit element
         "Select the list of tickers for the model", # prompt
         ['DOW_30_TICKER', 'TECH_20_TICKER'], # for now only support the DOW_30

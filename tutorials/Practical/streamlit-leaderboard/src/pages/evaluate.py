@@ -3,7 +3,7 @@ import time
 import numpy as np
 import sys, pathlib
 
-sys.path.append(str(pathlib.Path(__file__).parent.parent.absolute()))
+sys.path.append(str(pathlib.Path(__file__).parent.parent.parent.absolute()))
 from src.evaluation.evaluator import Evaluator
 from src.display.backtest import Backtest
 from src.backtest.backtest_sidebar import BacktestSidebar

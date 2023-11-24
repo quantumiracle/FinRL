@@ -14,6 +14,7 @@ import os
 import json
 import pandas as pd
 from datetime import date
+from pathlib import Path
 
 
 def clip_by_date(data, start_date, end_date):
@@ -49,8 +50,10 @@ def download_data(
         if_train=False,
         **kwargs
 ):  
+    data_path = Path(__file__).parent.parent.absolute() / 'tutorials/Practical/data'
     # data_path = os.path.join(os.path.split(__file__)[0], '..', 'data')
-    data_path = './data'
+    # data_path = './data'
+
     # data_file_name = f'DOW30_alpaca_2019-1-1_2023-1-1.pkl' 
     data_file_name = f'DOW_30_TICKER_alpaca_2019-1-1_2023-8-31.pkl'
     if 'CHI' in ticker_list_name:
@@ -59,10 +62,9 @@ def download_data(
         data_file_name = f'TECH_20_TICKER_alpaca_2020-1-1_2023-9-30.pkl'  
     elif 'NAS' in ticker_list_name:
         data_file_name = f'NAS_100_TICKER_alpaca_2019-1-1_2023-8-31.pkl'
-
     file_path = os.path.join(data_path, data_file_name)
     dp = DataProcessor(data_source, **kwargs)
-    print(os.getcwd())
+    # print(os.getcwd())
     print('file path: ', file_path)
     if os.path.isfile(file_path):
         # load if exist

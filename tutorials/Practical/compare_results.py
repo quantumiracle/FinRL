@@ -120,6 +120,24 @@ def _get_eval_value(path, trade_log_dir=None):
     return_ratio = account_value[-1] / initial_account_value
     return return_ratio
 
+def copytree(src, dst):
+    """Copy files and directories from src to dst, excluding the root directory of src."""
+
+    # Ensure the destination directory exists
+    if not os.path.exists(dst):
+        os.makedirs(dst)
+
+    # List all the files and directories in the source directory
+    for item in os.listdir(src):
+        s = os.path.join(src, item)
+        d = os.path.join(dst, item)
+
+        # Recursively copy directories; copy files directly
+        if os.path.isdir(s):
+            shutil.copytree(s, d)
+        else:
+            shutil.copyfile(s, d)
+
 
 if __name__ == "__main__":
     EVAL_START_DATE = '2023-1-1'
@@ -150,4 +168,5 @@ if __name__ == "__main__":
     full_tar_list = [p.replace(log_path, tar_path) for p in full_path_list]
 
     for path, target in zip(full_path_list, full_tar_list):
-        shutil.copytree(path, target)
+        # shutil.copytree(path, target)
+        copytree(path, target)
