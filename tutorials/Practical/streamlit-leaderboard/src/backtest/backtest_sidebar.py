@@ -6,7 +6,6 @@ import os
 import time
 
 from src.config import ADMIN_USERNAME, BACKTEST_PARAMS, MODEL_OUTPUT_DIR, BACKTEST_DIR
-# from src.backtest.backtest_manager import BacktestManager, SingleBacktest
 from src.common.utils import loadImg
 
 class BacktestSidebar:
@@ -16,10 +15,8 @@ class BacktestSidebar:
                  backtest_evaluator: Optional[Callable[[Path, Path, Dict], bool]] = None,
                  ):
         self.username = username
-        # self.backtest_manager = backtest_manager
         self.backtest_validator = backtest_validator
         self.backtest_evaluator = backtest_evaluator
-        # self.participant: SingleBacktest = None
         self.file_uploader_key = f"file upload {username}"
         
         # paramters for backtesting
@@ -58,19 +55,13 @@ class BacktestSidebar:
     def _backtest(self):
         # backtest return counter
         self.__init_counters()
+
+        # step 1: get the list of models in MODEL_OUTPUT_DIR
+        model_folders = os.listdir(MODEL_OUTPUT_DIR)
         
 
         if st.sidebar.button('Backtest'):
-            '''
-            TODO:
-            4. display results
-            '''
-
-            # step 1: get the list of models in MODEL_OUTPUT_DIR
-            model_folders = os.listdir(MODEL_OUTPUT_DIR)
-            
             progress_value = 0
-            print(model_folders)
             with st.spinner('Wait for it...'):
                 progress_text = f"{len(model_folders)} models to backtest, please wait..."
                 progress_bar = st.sidebar.progress(0, text=progress_text)

@@ -75,7 +75,7 @@ EVALUATOR_CLASS_BACKTEST = BacktestEvaluator
 EVALUATOR_KWARGS_BACKTEST = {}
 
 # The directory in which the trained models are dumped
-MODEL_OUTPUT_DIR = Path(__file__).parent.parent.absolute() / 'model_output'
+MODEL_OUTPUT_DIR = Path(__file__).parent.parent.parent.absolute() / 'log'
 # The directory in which the evaluation results are dumped
 BACKTEST_DIR = Path(__file__).parent.parent.absolute() / 'backtest_output'
 
@@ -121,7 +121,7 @@ BACKTEST_PARAMS = {
     'ticker_list': [
         st.sidebar.selectbox, # streamlit element
         "Select the list of tickers for the model", # prompt
-        ['DOW_30_TICKER'], # for now only support the DOW_30
+        ['DOW_30_TICKER', 'TECH_20_TICKER'], # for now only support the DOW_30
     ],
     'candle_time_interval': [
         st.sidebar.selectbox, # streamlit element

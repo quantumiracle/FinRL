@@ -113,7 +113,7 @@ def backtest_plot_v2(
 
     dict_results = cal_returns_tear_sheet(returns=test_returns)
 
-    return figs, test_returns
+    return figs, test_returns, dict_results
 
 
 def get_baseline_v2(ticker, start, end):
