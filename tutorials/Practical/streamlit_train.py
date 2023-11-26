@@ -86,7 +86,7 @@ def test_process(**kwargs):
     # S&P 500: ^GSPC
     # Dow Jones Index: ^DJI
     # NASDAQ 100: ^NDX
-    figs, returns = backtest_plot_v2(account_value, baseline_df)
+    figs, returns, dict_results = backtest_plot_v2(account_value, baseline_df)
 
     image_path = os.path.join(
         save_path,
@@ -316,7 +316,7 @@ if __name__ == "__main__":
         # Dow Jones Index: ^DJI
         # NASDAQ 100: ^NDX
 
-        figs, returns = backtest_plot_v2(account_value, baseline_df)
+        figs, returns, dict_results = backtest_plot_v2(account_value, baseline_df)
         from PIL import Image
 
         image_path = os.path.join(

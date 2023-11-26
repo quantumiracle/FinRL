@@ -89,56 +89,56 @@ class BacktestEvaluator(Evaluator):
     def _evaluate_backtest(self, model_path: Path, output_path: Path, params: Dict) -> int:
         env = StockTradingEnv
         initial_account_value = 100000.0
-        try:
-            ticker_list = eval(params['ticker_list_name'])
-            account_value, _ = test(
-                start_date=params['start_date'].strftime("%Y-%m-%d"),
-                end_date=params['end_date'].strftime("%Y-%m-%d"),
-                ticker_list_name=params['ticker_list_name'],
-                ticker_list=ticker_list,
-                data_source='alpaca',
-                time_interval=params['candle_time_interval'],
-                technical_indicator_list=INDICATORS,
-                drl_lib='elegantrl',
-                env=env,
-                model_name='ppo',
-                API_KEY=API_KEY,
-                API_SECRET=API_SECRET,
-                API_BASE_URL=API_BASE_URL,
-                cwd=os.path.join(model_path, "process/"),
-                if_plot=True,  # to return a dataframe for backtest_plot
-                break_step=1e7)
-            print("============== account_value ===========")
-            print(account_value.columns)
-            print(account_value)
+        # try:
+        ticker_list = eval(params['ticker_list_name'])
+        account_value, _ = test(
+            start_date=params['start_date'].strftime("%Y-%m-%d"),
+            end_date=params['end_date'].strftime("%Y-%m-%d"),
+            ticker_list_name=params['ticker_list_name'],
+            ticker_list=ticker_list,
+            data_source='alpaca',
+            time_interval=params['candle_time_interval'],
+            technical_indicator_list=INDICATORS,
+            drl_lib='elegantrl',
+            env=env,
+            model_name='ppo',
+            API_KEY=API_KEY,
+            API_SECRET=API_SECRET,
+            API_BASE_URL=API_BASE_URL,
+            cwd=os.path.join(model_path, "process/"),
+            if_plot=True,  # to return a dataframe for backtest_plot
+            break_step=1e7)
+        print("============== account_value ===========")
+        print(account_value.columns)
+        print(account_value)
 
-            # baseline stats
-            print("==============Get Baseline Stats===========")
-            baseline_df = get_baseline_v2(            
-                    ticker = params['baseline_ticker'], 
-                    start = params['start_date'].strftime("%Y-%m-%d"),
-                    end = params['end_date'].strftime("%Y-%m-%d")
-            )
+        # baseline stats
+        print("==============Get Baseline Stats===========")
+        baseline_df = get_baseline_v2(            
+                ticker = params['baseline_ticker'], 
+                start = params['start_date'].strftime("%Y-%m-%d"),
+                end = params['end_date'].strftime("%Y-%m-%d")
+        )
 
-            stats = backtest_stats(baseline_df, value_col_name='close')
-            print(stats)
+        stats = backtest_stats(baseline_df, value_col_name='close')
+        print(stats)
 
-            print("==============Compare to Baseline===========")
-            figs, returns, dict_result = backtest_plot_v2(account_value, baseline_df)
-            backtest_folder = self.get_backtest_output_dir(output_path, params, model_path)
-            os.makedirs(backtest_folder, exist_ok=True)
-            figs.savefig(f'{backtest_folder}/backtest.png')
-            print("=== dict result ===")
-            for k,v in dict_result.items():
-                print(f"{k} (type {type(v)})")
-            print("returns: "+f"{dict_result['cumulative_returns'][-1]:.2f}")
-            with open(f'{backtest_folder}/backtest.pkl', 'wb') as pkl_file:
-                pickle.dump(dict_result, pkl_file, protocol=pickle.HIGHEST_PROTOCOL)
-            return 1 # success
+        print("==============Compare to Baseline===========")
+        figs, returns, dict_result = backtest_plot_v2(account_value, baseline_df)
+        backtest_folder = self.get_backtest_output_dir(output_path, params, model_path)
+        os.makedirs(backtest_folder, exist_ok=True)
+        figs.savefig(f'{backtest_folder}/backtest.png')
+        print("=== dict result ===")
+        for k,v in dict_result.items():
+            print(f"{k} (type {type(v)})")
+        print("returns: "+f"{dict_result['cumulative_returns'][-1]:.2f}")
+        with open(f'{backtest_folder}/backtest.pkl', 'wb') as pkl_file:
+            pickle.dump(dict_result, pkl_file, protocol=pickle.HIGHEST_PROTOCOL)
+        return 1 # success
 
-        except:
-            print('!!! error in backtest !!!')
-            return 2 # fail
+        # except:
+        #     print('!!! error in backtest !!!')
+        #     return 2 # fail
 
     def validate_submission(self, io_stream: BytesIO) -> bool:
         io_stream.seek(0)

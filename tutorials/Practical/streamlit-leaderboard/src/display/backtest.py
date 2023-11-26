@@ -5,7 +5,7 @@ from typing import Dict
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-
+import numpy as np
 from src.config import BACKTEST_PARAMS, MODEL_OUTPUT_DIR, BACKTEST_DIR
 from src.evaluation.evaluator import Evaluator
 # from src.config import FEATURES, FILTERS
@@ -49,6 +49,7 @@ class Backtest:
         
     def _display_leaderboard(self, df: pd.DataFrame, sort_by: str="cumulative_returns") -> None:
         df2show = df.sort_values(sort_by, ascending=False)
+        # import pdb; pdb.set_trace()
         st.dataframe(
             df2show,
             column_config={
@@ -67,6 +68,34 @@ class Backtest:
                                         min_value=0,
                                         max_value=df2show["cumulative_returns"].max(),
                                     ),
+                "max_drawdown": st.column_config.ProgressColumn(
+                                        "Max Drawdown",
+                                        help="Maximum Drawdown",
+                                        format="%.2f",
+                                        min_value=df2show["max_drawdown"].min(),
+                                        max_value=df2show["max_drawdown"].max(),
+                                    ),
+                "sharpe": st.column_config.LineChartColumn(
+                    "Sharpe Sparkline",
+                    width="medium",
+                    help="The rolling Sharpe ratio over the backtested period",
+                    y_min=0,
+                    # y_max=100,
+                ),
+                "volatility": st.column_config.LineChartColumn(
+                    "Volatility Sparkline",
+                    width="medium",
+                    help="The rolling volatility over the backtested period",
+                    # y_min=0,
+                    # y_max=100,
+                ),
+                "drawdown_underwater": st.column_config.LineChartColumn(
+                    "Drawdown Sparkline",
+                    width="medium",
+                    help="The drawdown underwater over the backtested period",
+                    y_min=df2show['max_drawdown'].apply(lambda x: np.min(x)).min(),
+                    y_max=0,
+                ),
                 "return_line": st.column_config.LineChartColumn(
                     "Return Sparkline",
                     width="medium",
@@ -105,6 +134,11 @@ class Backtest:
                     'model': model,
                     'return': b['returns'][-1],
                     'cumulative_returns': b['cumulative_returns'][-1],
+                    # 'drawdowns': b['drawdowns'].values,  # df
+                    'max_drawdown': b['drawdown_underwater'].values.min(),
+                    'sharpe': b['rolling_sharpe'].values,
+                    'volatility': b['rolling_volatility'].values,
+                    'drawdown_underwater': b['drawdown_underwater'].values,
                     'return_line': b['returns'].values,
                     'cumulative_returns_line': b['cumulative_returns'].values,
                 })

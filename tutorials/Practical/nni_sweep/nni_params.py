@@ -18,8 +18,8 @@ search_space = {
     # 'time_across_month': {'_type': 'choice', '_value': [1,3,6,12,24]},
     'time_start_month': {'_type': 'choice', '_value': [12]},
     'time_across_month': {'_type': 'choice', '_value': [12]},  # 12
-    # 'ticker_list': {'_type': 'choice', '_value': ['DOW_30_TICKER']},
-    'ticker_list': {'_type': 'choice', '_value': ['TECH_20_TICKER']},
+    'ticker_list': {'_type': 'choice', '_value': ['DOW_30_TICKER']},
+    # 'ticker_list': {'_type': 'choice', '_value': ['TECH_20_TICKER']},
     # 'ticker_list': {'_type': 'choice', '_value': ['DOW_30_TICKER', 'TECH_20_TICKER', 'CHINESE_STOCK_TICKER', 'NAS_100_TICKER', 'SP_500_TICKER']},
     # 'candle_time_interval': {'_type': 'choice', '_value': ['1Min', '5Min', '15Min', '30Min', '60Min']},
     'candle_time_interval': {'_type': 'choice', '_value': ['1Min', '5Min', '15Min', '30Min']},
@@ -35,6 +35,6 @@ search_space = {
     'target_step': {'_type': 'choice', '_value': [2000, 5000, 8000]},
     'learning_rate': {'_type': 'choice', '_value': [1e-4, 3e-4]},
     'batch_size': {'_type': 'choice', '_value': [2048]},
-    'gamma': {'_type': 'choice', '_value': [0.985, 0.99, 0.995]},
+    'gamma': {'_type': 'choice', '_value': [0.995]},
     'net_dimension': {'_type': 'choice', '_value': [128, 512]},
 }

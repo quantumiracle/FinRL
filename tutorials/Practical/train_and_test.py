@@ -139,7 +139,7 @@ def train_and_test(
     print(stats)
 
     print("==============Compare to Baseline===========")
-    figs, returns = backtest_plot_v2(account_value, baseline_df)
+    figs, returns, dict_results = backtest_plot_v2(account_value, baseline_df)
     figs.savefig(os.path.join(save_path, "backtest.pdf"))
     # return returns.sum()
     if isinstance(account_value, list): # if_plot = False

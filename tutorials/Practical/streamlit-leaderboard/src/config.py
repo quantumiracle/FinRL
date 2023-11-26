@@ -106,7 +106,7 @@ BACKTEST_PARAMS = {
     'start_date': [
         st.sidebar.date_input, # streamlit element
         "Input the test start date", # prompt
-        datetime.date(2023, 2, 1), # default date
+        datetime.date(2023, 1, 1), # default date
     ],
     'end_date': [
         st.sidebar.date_input, # streamlit element

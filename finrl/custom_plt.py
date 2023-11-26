@@ -165,9 +165,8 @@ def cal_returns_tear_sheet(returns):
     result['cumulative_returns'] = cumulative_returns
 
     # rolling_volatility
-
     APPROX_BDAYS_PER_MONTH = 21
-    rolling_window = APPROX_BDAYS_PER_MONTH * 6  # minimum time
+    rolling_window = APPROX_BDAYS_PER_MONTH * 2  # minimum time
     rolling_vol_ts = timeseries.rolling_volatility(
         returns, rolling_window)
     result['rolling_volatility'] = rolling_vol_ts

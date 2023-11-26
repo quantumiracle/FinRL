@@ -141,7 +141,7 @@ class ExampleEvaluator(Evaluator):
 
             print("==============Compare to Baseline===========")
             # figs = backtest_plot(account_value, baseline_start=test_start_date, baseline_end=test_end_date, baseline_ticker=baseline_ticker,
-            figs, returns = backtest_plot_v2(account_value, baseline_df)
+            figs, returns, dict_results = backtest_plot_v2(account_value, baseline_df)
 
             figs.savefig(f'{filepath}/backtest.png')
             return True

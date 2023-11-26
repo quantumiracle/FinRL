@@ -152,9 +152,10 @@ if __name__ == "__main__":
 
     # dir_list = ['20230924']
     # dir_list = ['20231112_Dow_30']
-    dir_list = ['20231118_TECH_20_TICKER']
+    dir_list = ['20231119_TECH_20_TICKER']
     # dir_list = ['with_conf']  # run idex under ./log/
     # dir_list = ['ppo_2019-01-01_2023-08-31_2023-9-4-16-45-29']
+    dir_list = ['test']
 
     # get path result dict
     res = get_top_n_path(dir_list, 50, eval_log_dir=eval_log_dir, trade_log_dir=trade_log_dir)
@@ -165,8 +166,15 @@ if __name__ == "__main__":
     # copy dir to target path
     tar_path = os.path.join(os.path.dirname(__file__), f'./log/selected_with_{eval_log_name}', )
     full_path_list = list(res.keys())
-    full_tar_list = [p.replace(log_path, tar_path) for p in full_path_list]
+    # full_tar_list = [p.replace(log_path, tar_path) for p in full_path_list]
+    full_tar_list = []
+    for path in full_path_list:
+        for dir_name in dir_list:
+            # remove dir_name in tar_dir
+            path = path.replace(dir_name+'/', '')
+            # update full_tar_list
+            full_tar_list.append(path.replace(log_path, tar_path))
 
     for path, target in zip(full_path_list, full_tar_list):
-        # shutil.copytree(path, target)
-        copytree(path, target)
+        shutil.copytree(path, target)
+        # copytree(path, target)
