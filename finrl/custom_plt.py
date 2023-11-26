@@ -31,6 +31,7 @@ def create_returns_tear_sheet(returns, positions=None,
     plotting.show_worst_drawdown_periods(returns)
 
     vertical_sections = 11
+    APPROX_BDAYS_PER_MONTH = 21
 
     if live_start_date is not None:
         vertical_sections += 1
@@ -122,10 +123,12 @@ def create_returns_tear_sheet(returns, positions=None,
             returns, benchmark_rets, ax=ax_rolling_beta)
 
     plotting.plot_rolling_volatility(
-        returns, factor_returns=benchmark_rets, ax=ax_rolling_volatility)
+        returns, factor_returns=benchmark_rets, ax=ax_rolling_volatility, 
+        rolling_window=APPROX_BDAYS_PER_MONTH * 1)  # make shorter
 
     plotting.plot_rolling_sharpe(
-        returns, ax=ax_rolling_sharpe)
+        returns, ax=ax_rolling_sharpe,
+        rolling_window=APPROX_BDAYS_PER_MONTH * 1)  # make shorter
 
     # Drawdowns  error: matplotlib.units.ConversionError: Failed to convert value(s) to axis units: (NaT, Timestamp('2022-12-30 00:00:00+0000', tz='UTC'))
     # plotting.plot_drawdown_periods(
@@ -166,7 +169,7 @@ def cal_returns_tear_sheet(returns):
 
     # rolling_volatility
     APPROX_BDAYS_PER_MONTH = 21
-    rolling_window = APPROX_BDAYS_PER_MONTH * 2  # minimum time
+    rolling_window = APPROX_BDAYS_PER_MONTH * 1  # minimum time
     rolling_vol_ts = timeseries.rolling_volatility(
         returns, rolling_window)
     result['rolling_volatility'] = rolling_vol_ts

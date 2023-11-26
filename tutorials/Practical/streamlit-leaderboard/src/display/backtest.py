@@ -114,6 +114,12 @@ class Backtest:
             hide_index=True,
         )
 
+    def _drop_nan(self, arr) -> np.ndarray:
+        # drop nan values for each array
+        mask = np.isnan(arr)
+        filtered_arr = arr[~mask]
+        return filtered_arr
+
     def _get_leaderboard(self, params: dict) -> None:
         """
         Given the set of backtesting parameters, get the leaderboard data for evaluated models
@@ -136,8 +142,8 @@ class Backtest:
                     'cumulative_returns': b['cumulative_returns'][-1],
                     # 'drawdowns': b['drawdowns'].values,  # df
                     'max_drawdown': b['drawdown_underwater'].values.min(),
-                    'sharpe': b['rolling_sharpe'].values,
-                    'volatility': b['rolling_volatility'].values,
+                    'sharpe': self._drop_nan(b['rolling_sharpe'].values),  # exists nan values for initial rolling window
+                    'volatility': self._drop_nan(b['rolling_volatility'].values),
                     'drawdown_underwater': b['drawdown_underwater'].values,
                     'return_line': b['returns'].values,
                     'cumulative_returns_line': b['cumulative_returns'].values,
