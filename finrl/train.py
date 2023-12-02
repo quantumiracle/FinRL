@@ -155,7 +155,7 @@ def train(
         import numpy as np
         # turbulence_array = np.expand_dims(turbulence_array, axis=-1)
         break_step = kwargs.get("break_step", 1e6)
-        erl_params = kwargs.get("erl_params")
+        erl_params = kwargs.get("rl_params")
         agent = DRLAgent_erl(
             env=env,
             price_array=price_array,
@@ -163,24 +163,13 @@ def train(
             turbulence_array=turbulence_array,
         )
         model = agent.get_model(model_name, model_kwargs=erl_params)
-        if not os.path.exists(cwd):
-            os.mkdir(cwd)
-        params = {
-            'erl_params': erl_params,
-            'start_date': start_date,
-            'end_date': end_date,
-            'ticker_list_name': ticker_list_name,
-            'ticker_list': ticker_list,
-        }
-        with open(os.path.join(cwd, 'params.json'), 'w') as f:
-            json.dump(params, f)
 
         trained_model = agent.train_model(
             model=model, cwd=cwd, total_timesteps=break_step
         )
     elif drl_lib == "rllib":
         total_episodes = kwargs.get("total_episodes", 100)
-        rllib_params = kwargs.get("rllib_params")
+        rllib_params = kwargs.get("rl_params")
         from finrl.agents.rllib.models import DRLAgent as DRLAgent_rllib
 
         agent_rllib = DRLAgent_rllib(
@@ -203,7 +192,8 @@ def train(
         trained_model.save(cwd)
     elif drl_lib == "stable_baselines3":
         total_timesteps = kwargs.get("total_timesteps", 1e6)
-        agent_params = kwargs.get("agent_params")
+        agent_params = kwargs.get("rl_params")
+        print('rl_params', agent_params)
         from finrl.agents.stablebaselines3.models import DRLAgent as DRLAgent_sb3
 
         agent = DRLAgent_sb3(env=env_instance)
@@ -217,6 +207,19 @@ def train(
     else:
         raise ValueError("DRL library input is NOT supported. Please check.")
 
+    # log the parameters
+    if not os.path.exists(cwd):
+        os.mkdir(cwd)
+    params = {
+        'rrl_lib': drl_lib,
+        'rl_params': kwargs.get("rl_params"),
+        'start_date': start_date,
+        'end_date': end_date,
+        'ticker_list_name': ticker_list_name,
+        'ticker_list': ticker_list,
+    }
+    with open(os.path.join(cwd, 'params.json'), 'w') as f:
+        json.dump(params, f)
 
 if __name__ == "__main__":
 
@@ -237,7 +240,7 @@ if __name__ == "__main__":
         env=env,
         model_name="ppo",
         cwd="./test_ppo",
-        erl_params=ERL_PARAMS,
+        rl_params=ERL_PARAMS,
         break_step=1e5,
         kwargs=kwargs,
     )

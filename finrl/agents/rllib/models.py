@@ -1,6 +1,6 @@
 # DRL models from RLlib
 from __future__ import annotations
-
+import copy
 import ray
 from ray.rllib.agents.a3c import a2c
 from ray.rllib.agents.ddpg import ddpg
@@ -162,13 +162,28 @@ class DRLAgent:
         except BaseException:
             raise ValueError("Fail to load agent!")
 
+        trading_log = {
+            'asset': [],
+            'total_value': [],
+            'action': []
+        }
+
         # test on the testing env
         state = env_instance.reset()
         episode_returns = []  # the cumulative_return / initial_account
         episode_total_assets = [env_instance.initial_total_asset]
         done = False
+        step = 0
         while not done:
             action = trainer.compute_single_action(state)
+
+            trading_log['asset'].append(copy.deepcopy(env_instance.stocks))  # otherwise keep appending copies
+            if step == 0 :
+                trading_log['total_value'].append(env_instance.initial_total_asset)
+            else:
+                trading_log['total_value'].append(total_asset)
+            trading_log['action'].append(action)
+
             state, reward, done, _ = env_instance.step(action)
 
             total_asset = (
@@ -178,8 +193,13 @@ class DRLAgent:
             episode_total_assets.append(total_asset)
             episode_return = total_asset / env_instance.initial_total_asset
             episode_returns.append(episode_return)
+            step += 1
         ray.shutdown()
         print("episode return: " + str(episode_return))
         print("Test Finished!")
 
-        return episode_total_assets
+        if return_log:
+            return episode_total_assets, trading_log
+        else:
+            return episode_total_assets, None
+

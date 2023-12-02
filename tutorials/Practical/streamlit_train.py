@@ -36,7 +36,7 @@ def train_process(**kwargs):
         API_KEY=kwargs["API_KEY"],
         API_SECRET=kwargs["API_SECRET"],
         API_BASE_URL=kwargs["API_BASE_URL"],
-        erl_params=kwargs["erl_params"],
+        rl_params=kwargs["erl_params"],
         cwd=kwargs["cwd"],  # current_working_dir
         wandb=kwargs["wandb"],
         break_step=kwargs["break_step"],

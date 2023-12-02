@@ -1,12 +1,8 @@
-from finrl.train import train
-from finrl.test import test
 from finrl.config_tickers import *
 from finrl.config import INDICATORS
 from finrl.meta.data_processor import DataProcessor
 from private import API_KEY, API_SECRET, API_BASE_URL
 import os
-import numpy as np
-import pandas as pd
 
 
 # __all__ = ['SINGLE_TICKER', 'CHINESE_STOCK_TICKER', 'DOW_30_TICKER','TECH_20_TICKER', \

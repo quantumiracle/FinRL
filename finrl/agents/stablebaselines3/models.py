@@ -5,6 +5,7 @@ import time
 
 import numpy as np
 import pandas as pd
+import copy
 from stable_baselines3 import A2C
 from stable_baselines3 import DDPG
 from stable_baselines3 import PPO
@@ -130,7 +131,7 @@ class DRLAgent:
         return account_memory[0], actions_memory[0]
 
     @staticmethod
-    def DRL_prediction_load_from_file(model_name, environment, cwd, deterministic=True):
+    def DRL_prediction_load_from_file(model_name, environment, cwd, deterministic=True, return_log=False):
         if model_name not in MODELS:
             raise NotImplementedError("NotImplementedError")
         try:
@@ -139,16 +140,31 @@ class DRLAgent:
             print("Successfully load model", cwd)
         except BaseException:
             raise ValueError("Fail to load agent!")
+        
+        trading_log = {
+            'asset': [],
+            'total_value': [],
+            'action': []
+        }
 
         # test on the testing env
         state = environment.reset()
         episode_returns = []  # the cumulative_return / initial_account
         episode_total_assets = [environment.initial_total_asset]
         done = False
+        step = 0
         while not done:
             action = model.predict(state, deterministic=deterministic)[0]
-            state, reward, done, _ = environment.step(action)
+            
+            trading_log['asset'].append(copy.deepcopy(environment.stocks))  # otherwise keep appending copies
+            if step == 0 :
+                trading_log['total_value'].append(environment.initial_total_asset)
+            else:
+                trading_log['total_value'].append(total_asset)
+            trading_log['action'].append(action)
 
+            state, reward, done, _ = environment.step(action)
+                
             total_asset = (
                 environment.amount
                 + (environment.price_ary[environment.day] * environment.stocks).sum()
@@ -156,10 +172,14 @@ class DRLAgent:
             episode_total_assets.append(total_asset)
             episode_return = total_asset / environment.initial_total_asset
             episode_returns.append(episode_return)
+            step += 1
 
         print("episode_return", episode_return)
         print("Test Finished!")
-        return episode_total_assets
+        if return_log:
+            return episode_total_assets, trading_log
+        else:
+            return episode_total_assets, None
 
 
 class DRLEnsembleAgent:

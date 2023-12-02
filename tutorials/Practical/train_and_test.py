@@ -7,7 +7,7 @@ from finrl.plot import backtest_stats, backtest_plot, get_baseline, backtest_plo
 from private import API_KEY, API_SECRET, API_BASE_URL
 import os, json
 from datetime import datetime
-from tutorials.Practical.config import ERL_PARAMS, AlgoLib, InitialCapital
+from tutorials.Practical.config import ERL_PARAMS, SB3_PARAMS, RLlib_PARAMS, InitialCapital
 
 
 def train_and_test(
@@ -24,7 +24,8 @@ def train_and_test(
         env = StockTradingEnv,
         break_step=1e7,
         to_train=False,
-        erl_params=None,
+        alg_lib='elegantrl', # 'elegantrl', 'rllib', 'stable_baselines3'
+        rl_params=ERL_PARAMS,
         date_prefix=None,
 ):  
     if date_prefix is None:
@@ -37,11 +38,17 @@ def train_and_test(
     os.makedirs(save_path, exist_ok=True)
 
     if to_train:
-        if erl_params is None:
-            curr_params = ERL_PARAMS
+        if alg_lib == 'stable_baselines3':
+            rl_params = SB3_PARAMS
+        elif alg_lib == 'elegantrl':
+            rl_params = ERL_PARAMS
+        elif alg_lib == 'rllib':
+            rl_params = RLlib_PARAMS
         else:
-            curr_params = erl_params
+            raise NotImplementedError
+
         log_dict = {}
+
 
         training_args = {
             "start_date": train_start_date,
@@ -51,14 +58,14 @@ def train_and_test(
             "data_source": "alpaca",
             "time_interval": candle_time_interval,
             "technical_indicator_list": INDICATORS,
-            "drl_lib": AlgoLib,
+            "drl_lib": alg_lib,
             "env": env,
             "initial_capital": InitialCapital,
             "model_name": model_name,
             "API_KEY": API_KEY,
             "API_SECRET": API_SECRET,
             "API_BASE_URL": API_BASE_URL,
-            "erl_params": curr_params,
+            "rl_params": rl_params,
             "cwd": os.path.join(save_path, "process/"),  # current_working_dir
             "wandb": False,  # wand be cannot be run in a subprocess
             "break_step": break_step,
@@ -72,11 +79,11 @@ def train_and_test(
         log_dict["DataSource"] = training_args["data_source"]
         log_dict["IndicatorList"] = training_args["technical_indicator_list"]
         log_dict["Algo"] = model_name
-        log_dict["AlgoLib"] = AlgoLib
+        log_dict["AlgoLib"] = alg_lib
         log_dict["TrainStartDate"] = train_start_date
         log_dict["TrainEndDate"] = train_end_date
         log_dict["TrainTradeInterval"] = candle_time_interval
-        log_dict["ErlParams"] = curr_params
+        log_dict["RlParams"] = rl_params
         log_dict["BreakStep"] = training_args["break_step"]
 
         if not os.path.exists(save_path):
@@ -101,7 +108,7 @@ def train_and_test(
         #     API_KEY=API_KEY,
         #     API_SECRET=API_SECRET,
         #     API_BASE_URL=API_BASE_URL,
-        #     erl_params=curr_params,
+        #     rl_params=rl_params,
         #     cwd=f'./log/{MODEL_IDX}',  # current_working_dir
         #     wandb=False,
         #     break_step=1e7)
@@ -113,7 +120,7 @@ def train_and_test(
                          data_source='alpaca',
                          time_interval=candle_time_interval,
                          technical_indicator_list=INDICATORS,
-                         drl_lib=AlgoLib,
+                         drl_lib=alg_lib,
                          env=env,
                          initial_capital=InitialCapital,
                          model_name='ppo',
@@ -172,5 +179,5 @@ if __name__ == '__main__':
     model_idx = 'ppo_2022-6-11_2022-8-11_2023-3-4-0-10-6'
 
     value = train_and_test(train_start_date, train_end_date, test_start_date, test_end_date, StockPool, ticker_list, candle_time_interval, 
-    baseline_ticker, model_name, model_idx, )
+    baseline_ticker, model_name, model_idx, to_train=True)
     print('final value: ', value)

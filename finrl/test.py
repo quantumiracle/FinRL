@@ -57,12 +57,11 @@ def test(
             environment=env_instance,
             return_log=return_log
         )
-        if log is not None:
-            log['time'] = env_config['date_array'].unique()  # fill timestamp
+
     elif drl_lib == "rllib":
         from finrl.agents.rllib.models import DRLAgent as DRLAgent_rllib
 
-        episode_total_assets = DRLAgent_rllib.DRL_prediction(
+        episode_total_assets, log = DRLAgent_rllib.DRL_prediction(
             model_name=model_name,
             env=env,
             price_array=price_array,
@@ -70,16 +69,18 @@ def test(
             turbulence_array=turbulence_array,
             agent_path=cwd,
         )
-        log = {} # TODO
+
     elif drl_lib == "stable_baselines3":
         from finrl.agents.stablebaselines3.models import DRLAgent as DRLAgent_sb3
 
-        episode_total_assets = DRLAgent_sb3.DRL_prediction_load_from_file(
-            model_name=model_name, environment=env_instance, cwd=cwd
+        episode_total_assets, log = DRLAgent_sb3.DRL_prediction_load_from_file(
+            model_name=model_name, environment=env_instance, cwd=cwd, return_log=return_log
         )
-        log = {} # TODO
     else:
         raise ValueError("DRL library input is NOT supported. Please check.")
+
+    if log is not None:
+        log['time'] = env_config['date_array'].unique()  # fill timestamp
 
     if if_plot:
         # print(env_config['date_array'].unique()[-1000:])

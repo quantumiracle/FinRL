@@ -27,7 +27,8 @@ def nni_eval(params):
     candle_time_interval = params.pop("candle_time_interval")
     break_step = params.pop("break_step", int(1e7))
     model_name = params.pop("model_name", 'ppo')
-
+    alg_lib = params.pop("alg_lib", 'elegantrl')
+    
     train_start_date = '{}-{}-1'.format(*get_year_month(time_start_month))
     time_end_month = time_start_month + time_across_month
     time_end_month = min(time_end_month, 35) # within training range
@@ -41,10 +42,10 @@ def nni_eval(params):
     ticker_list = eval(ticker_list_name)[:num_stocks]
     baseline_ticker = ticker_list[0]
 
-    erl_params = overwrite_params(ERL_PARAMS, params)
+    rl_params = overwrite_params(ERL_PARAMS, params)
 
     value = train_and_test(train_start_date, train_end_date, NNI_TEST_START_DATE, NNI_TEST_END_DATE, ticker_list_name, ticker_list, candle_time_interval,
-        baseline_ticker, model_name, model_idx, break_step=break_step, to_train=True, erl_params=erl_params, date_prefix=args.date)
+        baseline_ticker, model_name, model_idx, break_step=break_step, to_train=True, alg_lib=alg_lib, rl_params=rl_params, date_prefix=args.date)
     return value
 
 parser = argparse.ArgumentParser(description="Launch configurations.")

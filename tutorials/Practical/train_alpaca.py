@@ -1,12 +1,8 @@
 from finrl.train import train
-from finrl.test import test
 from finrl.config_tickers import DOW_30_TICKER
 from finrl.config import INDICATORS
 from finrl.meta.env_stock_trading.env_stocktrading_np import StockTradingEnv
 from private import API_KEY, API_SECRET, API_BASE_URL
-
-import numpy as np
-import pandas as pd
 
 ticker_list_name = 'DOW_30_TICKER'
 ticker_list = eval(ticker_list_name)
@@ -42,7 +38,7 @@ if __name__ == "__main__":
         API_KEY = API_KEY, 
         API_SECRET = API_SECRET, 
         API_BASE_URL = API_BASE_URL,
-        erl_params=ERL_PARAMS,
+        rl_params=ERL_PARAMS,
         cwd=f'./papertrading_erl/{MODEL_IDX}', #current_working_dir
         wandb=False,
         break_step=1e7)

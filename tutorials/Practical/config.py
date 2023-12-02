@@ -1,6 +1,4 @@
 
-AlgoLib = ['elegantrl', 'rllib', 'stable_baselines3'][0]
-
 InitialCapital = 1e5
 
 ERL_PARAMS = {
@@ -22,6 +20,8 @@ SAC_PARAMS = {
     "learning_starts": 100,
     "ent_coef": "auto_0.1",
 }
+
+SB3_PARAMS = {'n_steps': 2048, 'ent_coef': 0.02, 'learning_rate': 0.0003, 'batch_size': 64}
 
 NNI_TEST_START_DATE = '2022-12-1'
 NNI_TEST_END_DATE = '2023-1-1'

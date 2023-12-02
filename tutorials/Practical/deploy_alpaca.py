@@ -1,8 +1,6 @@
 import numpy as np
 import pandas as pd
 
-from finrl.train import train
-from finrl.test import test
 from finrl.config_tickers import DOW_30_TICKER
 from finrl.config import INDICATORS
 from finrl.meta.env_stock_trading.env_stocktrading_np import StockTradingEnv

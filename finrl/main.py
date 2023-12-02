@@ -76,7 +76,7 @@ def main() -> int:
             env=env,
             model_name="ppo",
             cwd="./test_ppo",
-            erl_params=ERL_PARAMS,
+            rl_params=ERL_PARAMS,
             break_step=1e5,
             kwargs=kwargs,
         )
