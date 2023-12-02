@@ -8,6 +8,7 @@ tutorials/Practical/log/
 private.py
 tutorials/Practical/streamlit-leaderboard/user_submissions/
 tutorials/Practical/private.py
+*wandb/
 
 # remove DS_Store
 **/.DS_Store
