@@ -24,7 +24,7 @@ def train_and_test(
         env = StockTradingEnv,
         break_step=1e7,
         to_train=False,
-        alg_lib='elegantrl', # 'elegantrl', 'rllib', 'stable_baselines3'
+        alg_lib='stable_baselines3', # 'elegantrl', 'rllib', 'stable_baselines3'
         rl_params=ERL_PARAMS,
         date_prefix=None,
 ):  

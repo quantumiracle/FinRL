@@ -191,9 +191,8 @@ def train(
         )
         trained_model.save(cwd)
     elif drl_lib == "stable_baselines3":
-        total_timesteps = kwargs.get("total_timesteps", 1e6)
+        total_timesteps = kwargs.get("break_step", 1e6)
         agent_params = kwargs.get("rl_params")
-        print('rl_params', agent_params)
         from finrl.agents.stablebaselines3.models import DRLAgent as DRLAgent_sb3
 
         agent = DRLAgent_sb3(env=env_instance)
@@ -208,18 +207,18 @@ def train(
         raise ValueError("DRL library input is NOT supported. Please check.")
 
     # log the parameters
-    if not os.path.exists(cwd):
-        os.mkdir(cwd)
-    params = {
-        'rrl_lib': drl_lib,
-        'rl_params': kwargs.get("rl_params"),
-        'start_date': start_date,
-        'end_date': end_date,
-        'ticker_list_name': ticker_list_name,
-        'ticker_list': ticker_list,
-    }
-    with open(os.path.join(cwd, 'params.json'), 'w') as f:
-        json.dump(params, f)
+    # if not os.path.exists(cwd):
+    #     os.mkdir(cwd)
+    # params = {
+    #     'rl_lib': drl_lib,
+    #     'rl_params': kwargs.get("rl_params"),
+    #     'start_date': start_date,
+    #     'end_date': end_date,
+    #     'ticker_list_name': ticker_list_name,
+    #     'ticker_list': ticker_list,
+    # }
+    # with open(os.path.join(cwd, 'params.json'), 'w') as f:
+    #     json.dump(params, f)
 
 if __name__ == "__main__":
 

@@ -5,7 +5,7 @@ from datetime import datetime
 current_datetime = datetime.now()
 formatted_date = current_datetime.strftime("%Y%m%d")
 # formatted_date += '_Tech_20'
-formatted_date += '_' + '_'.join(search_space['alg_lib']['_value'], search_space['ticker_list']['_value'])  # ticker list names: 'DOW_30_TICKER'
+formatted_date += '_' + '_'.join(search_space['alg_lib']['_value']+search_space['ticker_list']['_value'])  # ticker list names: 'DOW_30_TICKER'
 
 
 experiment = Experiment('local')
