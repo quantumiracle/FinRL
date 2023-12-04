@@ -25,10 +25,10 @@ def nni_eval(params):
     ticker_list_name = params.pop("ticker_list")
     num_stocks = params.pop("num_stocks", int(1e5))  # by default use all stocks in list
     candle_time_interval = params.pop("candle_time_interval")
-    break_step = params.pop("break_step", int(1e7))
+    break_step = params.pop("break_step", int(1e6))
     model_name = params.pop("model_name", 'ppo')
     alg_lib = params.pop("alg_lib", 'elegantrl')
-    
+
     train_start_date = '{}-{}-1'.format(*get_year_month(time_start_month))
     time_end_month = time_start_month + time_across_month
     time_end_month = min(time_end_month, 35) # within training range

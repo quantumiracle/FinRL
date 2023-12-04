@@ -155,7 +155,7 @@ if __name__ == "__main__":
     dir_list = ['20231119_TECH_20_TICKER']
     # dir_list = ['with_conf']  # run idex under ./log/
     # dir_list = ['ppo_2019-01-01_2023-08-31_2023-9-4-16-45-29']
-    dir_list = ['test']
+    # dir_list = ['test']
 
     # get path result dict
     res = get_top_n_path(dir_list, 50, eval_log_dir=eval_log_dir, trade_log_dir=trade_log_dir)
