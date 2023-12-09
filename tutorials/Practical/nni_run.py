@@ -17,11 +17,11 @@ experiment.config.tuner.class_args['optimize_mode'] = 'maximize'
 experiment.config.training_service.use_active_gpu = True
 experiment.config.max_trial_number = 10000
 # experiment.config.trial_gpu_number = 2
-experiment.config.trial_concurrency = 3  # number of jobs to run in parallel
+experiment.config.trial_concurrency = 10  # number of jobs to run in parallel
 # experiment.run(8880)  # start new training
-experiment.run(8092)  # start new training
+# experiment.run(8093)  # start new training
 
-# experiment.resume('vx7qdf8n', 8880)  # resume previous training
+experiment.resume('vx7qdf8n', 8880)  # resume previous training
 # experiment.resume('4u7lxhp1', 8880)  # resume previous training
 
 # experiment.stop()

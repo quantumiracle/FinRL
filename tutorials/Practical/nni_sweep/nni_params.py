@@ -18,7 +18,7 @@ search_space = {
     # 'time_across_month': {'_type': 'choice', '_value': [1,3,6,12,24]},
     'time_start_month': {'_type': 'choice', '_value': [12]},
     'time_across_month': {'_type': 'choice', '_value': [12]},  # 12
-    'ticker_list': {'_type': 'choice', '_value': ['DOW_30_TICKER']},  # TECH_20_TICKER, DOW_30_TICKER, CHINESE_STOCK_TICKER, NAS_100_TICKER, SP_500_TICKER
+    'ticker_list': {'_type': 'choice', '_value': ['TECH_20_TICKER']},  # TECH_20_TICKER, DOW_30_TICKER, CHINESE_STOCK_TICKER, NAS_100_TICKER, SP_500_TICKER
     'alg_lib': {'_type': 'choice', '_value': ['stable_baselines3']}, # 'stable_baselines3', 'rllib', 'elegantrl'
     # 'candle_time_interval': {'_type': 'choice', '_value': ['1Min', '5Min', '15Min', '30Min', '60Min']},
     'candle_time_interval': {'_type': 'choice', '_value': ['1Min', '5Min', '15Min', '30Min']},

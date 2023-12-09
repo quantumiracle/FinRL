@@ -53,18 +53,45 @@ class BacktestEvaluator(Evaluator):
             res += f"/{model_name}"
         return res
 
+    def _unzip(self, model_path: Path) -> None:
+        # unzip for stablebaseline3 models
+        # Check if model_path is a directory
+        if os.path.isdir(model_path):
+            # Iterate over the files in the directory
+            for file in os.listdir(model_path):
+                # Check if the file is a .zip file
+                if file.endswith('.zip'):
+                    # Construct the full path to the file
+                    zip_file_path = os.path.join(model_path, file)
+                    # Construct the directory path to extract to (removing .zip extension)
+                    extract_path = os.path.join(model_path, file[:-4])
+                    # Create the directory if it doesn't exist
+                    if not os.path.exists(extract_path):
+                        os.makedirs(extract_path)
+                    # Unzip the file
+                    with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+                        zip_ref.extractall(extract_path)
+                    print(f"Unzipped {file} into {extract_path}")
+        else:
+            print(f"{model_path} is not a directory or does not exist.")
+
     def validate(self, model_path: Path) -> bool:
         res = True
+        # unzip for stablebaseline3 models
+        # self._unzip(model_path)
         # test 1: it should be a folder
         res &= os.path.isdir(model_path)
         # test 2: it should contain conf.json
         res &= os.path.exists(os.path.join(model_path, 'conf.json'))
         if not os.path.exists(os.path.join(model_path, 'conf.json')):
             print(f'conf.json not exists in path: {model_path}')
-        # test 3: it should contain actor.pth
-        res &= os.path.exists(os.path.join(model_path, 'process', 'actor.pth'))
+        # test 3: it should contain policy model
+        exist_model = (os.path.exists(os.path.join(model_path, 'process', 'actor.pth')) or os.path.exists(os.path.join(model_path, 'process.zip')))
+        res &= exist_model
         if not os.path.exists(os.path.join(model_path, 'process', 'actor.pth')):
             print(f'actor.pth not exists in path: {model_path}/process')
+        elif not os.path.exists(os.path.join(model_path, 'process.zip')):
+            print(f'progress.zip not exists in path: {model_path}')
         # # test 3: it should contain actor.pth
         # res &= os.path.exists(os.path.join(model_path, 'actor.pth'))
         return res
@@ -85,10 +112,17 @@ class BacktestEvaluator(Evaluator):
             return 0
         else:
             return self._evaluate_backtest(model_path, output_path, params)
+    
+    def _get_conf(self, model_path: Path) -> Dict:
+        with open(os.path.join(model_path, 'conf.json'), 'r') as f:
+            conf_dict = json.load(f)
+        return conf_dict
 
     def _evaluate_backtest(self, model_path: Path, output_path: Path, params: Dict) -> int:
         env = StockTradingEnv
         initial_account_value = 100000.0
+        conf_dict = self._get_conf(model_path) # get training conf_dict from model_path
+        print(conf_dict['AlgoLib'])
         # try:
         ticker_list = eval(params['ticker_list_name'])
         account_value, _ = test(
@@ -99,7 +133,7 @@ class BacktestEvaluator(Evaluator):
             data_source='alpaca',
             time_interval=params['candle_time_interval'],
             technical_indicator_list=INDICATORS,
-            drl_lib='elegantrl',
+            drl_lib=conf_dict['AlgoLib'],
             env=env,
             model_name='ppo',
             API_KEY=API_KEY,
